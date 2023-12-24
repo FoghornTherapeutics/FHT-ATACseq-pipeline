@@ -8,7 +8,19 @@ Assay for Transposase-Accessible Chromatin using sequencing (ATACseq) is a power
 
 # Data
 
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975
+Run standard pipeline on publicly available data from paper "[Chromatin accessibility underlies synthetic lethality of SWI/SNF subunits in ARID1A-mutant cancers](https://elifesciences.org/articles/30506#content)" looking for potential PD markers as well as what an ATAC-seq profile looks like. This paper has ATACseq results of ARID1A-/- cancers with ARID1B KD. 
+
+data from GEO series:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975)
+
+Biological context (n=2):  TOV21G, HCT116
+wild type and modified with stable ARID1A KO
+Perturbagens (n=1):  shRNA KD of ARID1B
+Doses (N/A):  just the shRNA no relevant dose
+Timepoint (n=1):  
+Negative control (n=1):  wild type / untreated
+Replicates:  N=2
+
+
 
 ### HCT116 (ACH-000971)
 * WT: SRR5876158 & SRR5876159
@@ -26,4 +38,39 @@ https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975
 
 
 ## Alignment
+
+## Analysis
+
+
+
+
+# Results
+
+
+1) QC check:
+   
+   A) Insert size: classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+   
+   B) Duplication statistics: ~40% of the reads uniquely mapped to human genome
+   
+   C) FRiP scores: about 30% of the total peaks are found within the peaks
+
+
+   D) nIDR: Repicates of the same group show consistency.
+
+   
+   E) PCA (principal component analysis) plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
+
+
+   F) Sample to sample correlation: HCT116 shows more overlap between samples than TOV21G.
+   
+   
+2) Peak distribution:
+3) Genome location: Majority of loss of accessibility occur at distal intergenic regions.
+4) Motif analysis:
+5) Footprinting
+
+
+
+
 
