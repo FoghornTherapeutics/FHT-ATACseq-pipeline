@@ -39,9 +39,11 @@ The overall ATACseq architecture is the one below:
 
 A simplified version of the alignement is to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
 
-![](images/data_flow/alignment_data_flow.JPG)
+<img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
+
 
 The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
+
 
 ![](images/data_flow/IGView.JPG)
 
@@ -52,6 +54,7 @@ The goal of the ATACseq pipeline is to identifiy regions where the chromatin acc
 The first part of the downstream analysis is to look at QC measures. We look at the overall samples in the experiment to check for any outliers. The challenge of ATAC is that we cannot compare, like RNA, gene expression across exons, but we need to find a set of peaks that is common to all samples. Basically, we look for common location to look at across the genome. With that new set of peaks, we look at PCA (Principal Component Analysis) and at sample-to-sample correlations.
 
 ![](images/data_flow/QC_data_flow.JPG)
+
 
 Before we dive in the second part, we define some terminology. We call each sample a replicate. We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group. And the comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
 
@@ -69,37 +72,44 @@ This part of the downstream analysis compares reads at regions that are meaningf
    
    A) Insert size: classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
    NB: The oscillation of the insert size is due to the DNA helix shape (double stranded) including a major and minor group wrapped around each other. The enzyme has a preference for one of the groups.
-      	![](images/output_results/picard_insert_size.png)
+
+   <img src="/images/output_results/picard_insert_size.png" alt="image" style="width:700px;height:auto;">
+   
+
    
    B) Duplication statistics: ~40% of the reads uniquely mapped to human genome
-      	![](images/output_results/picard_deduplication.png)
+      	
+   <img src="/images/output_results/picard_deduplication.png" alt="image" style="width:700px;height:auto;">
    
    C) FRiP scores: about 30% of the total peaks are found within the peaks
-   	![](images/output_results/FRiP_Table.JPG)
+
+
+   <img src="/images/output_results/FRiP_Table.JPG" alt="image" style="width:550px;height:auto;">
+
+
 
    D) nIDR: Replicates of the same group show consistency.
+   <img src="/images/output_results/HCT116_nIDR.JPG" alt="image" style="width:700px;height:auto;">
+   <img src="/images/output_results/TOV21G_nIDR.JPG" alt="image" style="width:700px;height:auto;">
 
-       	![](images/output_results/HCT116_nIDR.JPG)
-     
-        ![](images/output_results/TOV21G_nIDR.JPG)
 
    
    E) PCA plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
    *   WT HCT116 cells and ARID1B KD HCT116 cells cluster together. It could be an indication that ARID1B KD does not have a strong effect in chromatin accessibility in WT HCT116 cells.
    *   We predict similar results between ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cells that cluster all together.
      
-        ![](images/output_results/PCA_all_samples.JPG)
 
-       	![](images/output_results/HCT116_PCA.JPG)
-     
-        ![](images/output_results/TOV21G_PCA.JPG)
-   
+        <img src="/images/output_results/PCA_all_samples.JPG" alt="image" style="width:760px;height:auto;">
+        <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
+        <img src="/images/output_results/TOV21G_PCA.JPG" alt="image" style="width:700px;height:auto;">
+      
   
    
    F) Sample to sample correlation:
    * HCT116 shows more overlap between samples than TOV21G.
    * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results.
-        ![](images/output_results/Heatmap_sample_to_sample_corr.JPG)
+
+     <img src="/images/output_results/Heatmap_sample_to_sample_corr.JPG" alt="image" style="width:550px;height:auto;">
      
         ![](images/output_results/boxplot_sample_to_sample_corr.JPG)
    
