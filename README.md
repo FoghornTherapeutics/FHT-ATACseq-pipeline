@@ -39,11 +39,11 @@ The overall ATACseq architecture is the one below:
 
 A simplified version of the alignement is to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
 
-![](images/output_results/alignment_data_flow.JPG)
+![](images/data_flow/alignment_data_flow.JPG)
 
 The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
 
-![](images/output_results/IGView.JPG)
+![](images/data_flow/IGView.JPG)
 
 
 ## Analysis
@@ -51,14 +51,14 @@ The goal of the ATACseq pipeline is to identifiy regions where the chromatin acc
 
 The first part of the downstream analysis is to look at QC measures. We look at the overall samples in the experiment to check for any outliers. The challenge of ATAC is that we cannot compare, like RNA, gene expression across exons, but we need to find a set of peaks that is common to all samples. Basically, we look for common location to look at across the genome. With that new set of peaks, we look at PCA (Principal Component Analysis) and at sample-to-sample correlations.
 
-![](images/output_results/QC_data_flow.JPG)
+![](images/data_flow/QC_data_flow.JPG)
 
 Before we dive in the second part, we define some terminology. We call each sample a replicate. We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group. And the comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
 
 This part of the downstream analysis compares reads at regions that are meaningful but also in common across samples of the same group, to be compared accross contrasts. Once this new set of peaks is defined, we quantify the number of reads in peaks and compute the differential peak area in each contrast to get a logFC and a pvalue by peaks. The peaks are split by change of chroamtin accssibility: descrease (down), increase (up) or unchanged. The three groups of peaks are used for the standard outputs of the downstream analysis (Genomic locations, motif, tornado plots, footprint).
 
 
-![](images/output_results/DownstreamAnalysis.JPG)
+![](images/data_flow/DownstreamAnalysis.JPG)
 
 
 
