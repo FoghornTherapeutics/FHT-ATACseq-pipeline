@@ -12,10 +12,15 @@ The standard pipeline is ran on publicly available data from paper "[Chromatin a
 data from GEO series:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975)
 
 Biological context (N=2):  TOV21G, HCT116
+
 wild type and modified with stable ARID1A KO
+
 Perturbagens (N=1):  shRNA KD of ARID1B
+
 Doses (N/A):  just the shRNA no relevant dose
+
 Negative control (N=1):  wild type / untreated
+
 Replicates:  N=2
 
 
