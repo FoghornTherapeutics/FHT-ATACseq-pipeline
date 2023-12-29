@@ -33,12 +33,32 @@ Replicates:  N=2
 
 # Data Flow
 
-
+The overall ATACseq architecture is the one below:
 
 ## Alignment
 
+A simplified version of the alignement is to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
+
+![](images/output_results/alignment_data_flow.JPG)
+
+The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
+
+![](images/output_results/IGView.JPG)
+
+
 ## Analysis
 
+
+The first part of the downstream analysis is to look at QC measures. We look at the overall samples in the experiment to check for any outliers. The challenge of ATAC is that we cannot compare, like RNA, gene expression across exons, but we need to find a set of peaks that is common to all samples. Basically, we look for common location to look at across the genome. With that new set of peaks, we look at PCA (Principal Component Analysis) and at sample-to-sample correlations.
+
+![](images/output_results/QC_data_flow.JPG)
+
+Before we dive in the second part, we define some terminology. We call each sample a replicate. We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group. And the comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
+
+This part of the downstream analysis compares reads at regions that are meaningful but also in common across samples of the same group, to be compared accross contrasts. Once this new set of peaks is defined, we quantify the number of reads in peaks and compute the differential peak area in each contrast to get a logFC and a pvalue by peaks. The peaks are split by change of chroamtin accssibility: descrease (down), increase (up) or unchanged. The three groups of peaks are used for the standard outputs of the downstream analysis (Genomic locations, motif, tornado plots, footprint).
+
+
+![](images/output_results/DownstreamAnalysis.JPG)
 
 
 
@@ -48,56 +68,83 @@ Replicates:  N=2
 1) QC check:
    
    A) Insert size: classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+   NB: The oscillation of the insert size is due to the DNA helix shape (double stranded) including a major and minor group wrapped around each other. The enzyme has a preference for one of the groups.
+      	![](images/output_results/picard_insert_size.png)
    
    B) Duplication statistics: ~40% of the reads uniquely mapped to human genome
+      	![](images/output_results/picard_deduplication.png)
    
    C) FRiP scores: about 30% of the total peaks are found within the peaks
+   	![](images/output_results/FRiP_Table.JPG)
 
    D) nIDR: Replicates of the same group show consistency.
 
+       	![](images/output_results/HCT116_nIDR.JPG)
+     
+        ![](images/output_results/TOV21G_nIDR.JPG)
+
    
-   E) PCA (Principal Component Analysis) plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
+   E) PCA plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
    *   WT HCT116 cells and ARID1B KD HCT116 cells cluster together. It could be an indication that ARID1B KD does not have a strong effect in chromatin accessibility in WT HCT116 cells.
    *   We predict similar results between ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cells that cluster all together.
+     
+        ![](images/output_results/PCA_all_samples.JPG)
+
+       	![](images/output_results/HCT116_PCA.JPG)
+     
+        ![](images/output_results/TOV21G_PCA.JPG)
+   
   
    
    F) Sample to sample correlation:
    * HCT116 shows more overlap between samples than TOV21G.
-   * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results. 
+   * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results.
+        ![](images/output_results/Heatmap_sample_to_sample_corr.JPG)
+     
+        ![](images/output_results/boxplot_sample_to_sample_corr.JPG)
    
    
-2) Peak distribution:
+3) Peak distribution:
 
    * ARID1A KO in WT HCT116 cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
    * ARID1B KD in WT HCT116 cells had little effect on chromatin accessibility.
    * In contrast, ARID1B KD in ARID1A-/- HCT116 cells resulted in hundreds of changed sites, primarily at regions where accessibility was lost.
    * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B KD) showed little effect of chromatin accessibility.
+   ![](images/output_results/peak_dist_boxplot.JPG)
 
      
-3) Genome location: Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
+4) Genome location: Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
+
+   ![](images/output_results/Genomic_location.JPG)
+
   
      
-4) Motif analysis: 
+5) Motif analysis: 
    * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
    * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
+  
+   ![](images/output_results/Motifs_down.pdf)
+
+   ![](images/output_results/Motifs_up.pdf)
+
+   ![](images/output_results/motif_heatmap.JPG)
+
+   ![](images/output_results/motif_heatmap_zoom.JPG)
+
+
+   + ADD SCATTER PLOT OF MOTIFS
      
-5) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
+7) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
 
-How is it build:
-   1)	First, order peaks within DMSO depending on read counts.
-   2)	concatenate down/unchanged/up.
-   3)	keep same order of peaks to display DMSO.
-   4)	expect to see a change in up and down.
-What do we observe here:
-   1)	Peaks losing accessibility show less intensity with the compound (i.e. there are less reads)
-   2)	Peaks gaining accessibility show more intensity with the compound (i.e. there are more reads)
-   3)	Anchor plot: at 24h, more down peaks than up peaks  overall decrease
-	At 72h, more up peaks than down  overall increase 
+   ![](images/output_results/TP_1.JPG)
+
+   ![](images/output_results/TP_2.JPG)
 
 
-6) Footprinting
+8) Footprinting
 
 
++ ADD VOLCANO PLOT, ANCHOR PLOT AND HEATMAP OVERALL
 
 
 
