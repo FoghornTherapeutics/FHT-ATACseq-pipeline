@@ -132,26 +132,41 @@ This part of the downstream analysis compares reads at regions that are meaningf
 5) Motif analysis: 
    * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
    * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
+
+  Motifs losing peak accessibility: 
   
-   ![](images/output_results/Motifs_down.pdf)
+   ![](images/output_results/Motifs_down.JPG)
+  
+  Motifs gaining peak accessibility: 
+  
+   ![](images/output_results/Motifs_up.JPG)
 
-   ![](images/output_results/Motifs_up.pdf)
+Heatmap of motifs accross all contrasts, clustered by motifs:
 
-   ![](images/output_results/motif_heatmap.JPG)
+   <img src="/images/output_results/motif_heatmap.JPG" alt="image" width="20%" height="auto">
+     
 
-   ![](images/output_results/motif_heatmap_zoom.JPG)
+Zoom in of certain clusters in the heatmap:
+
+
+   <img src="/images/output_results/motif_heatmap_zoom.JPG" alt="image" style="width:550px;height:auto;">
+     
+
 
 
    + ADD SCATTER PLOT OF MOTIFS
      
 7) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
+   
+   <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
+   <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
+     
 
-   ![](images/output_results/TP_1.JPG)
-
-   ![](images/output_results/TP_2.JPG)
+     
 
 
-8) Footprinting
+
+9) Footprinting
 
 
 + ADD VOLCANO PLOT, ANCHOR PLOT AND HEATMAP OVERALL
