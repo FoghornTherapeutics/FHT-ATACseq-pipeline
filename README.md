@@ -53,14 +53,17 @@ Replicates:  N=2
    
    C) FRiP scores: about 30% of the total peaks are found within the peaks
 
-
    D) nIDR: Replicates of the same group show consistency.
 
    
    E) PCA (Principal Component Analysis) plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
-
-
-   F) Sample to sample correlation: HCT116 shows more overlap between samples than TOV21G.
+   *   WT HCT116 cells and ARID1B KD HCT116 cells cluster together. It could be an indication that ARID1B KD does not have a strong effect in chromatin accessibility in WT HCT116 cells.
+   *   We predict similar results between ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cells that cluster all together.
+  
+   
+   F) Sample to sample correlation:
+   * HCT116 shows more overlap between samples than TOV21G.
+   * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results. 
    
    
 2) Peak distribution:
@@ -72,15 +75,27 @@ Replicates:  N=2
 
      
 3) Genome location: Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
-
   
      
-4) Motif analysis:
-   *
-   *
-   * Accessibility at AP-1 motif sites was also decreased in TOV21G cells following ARID1B knockdown
+4) Motif analysis: 
+   * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
+   * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
      
-5) Footprinting
+5) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
+
+How is it build:
+   1)	First, order peaks within DMSO depending on read counts.
+   2)	concatenate down/unchanged/up.
+   3)	keep same order of peaks to display DMSO.
+   4)	expect to see a change in up and down.
+What do we observe here:
+   1)	Peaks losing accessibility show less intensity with the compound (i.e. there are less reads)
+   2)	Peaks gaining accessibility show more intensity with the compound (i.e. there are more reads)
+   3)	Anchor plot: at 24h, more down peaks than up peaks  overall decrease
+	At 72h, more up peaks than down  overall increase 
+
+
+6) Footprinting
 
 
 
