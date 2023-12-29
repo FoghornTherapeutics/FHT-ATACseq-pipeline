@@ -9,18 +9,12 @@ Assay for Transposase-Accessible Chromatin using sequencing (ATACseq) is a power
 
 The standard pipeline is ran on publicly available data from paper "[Chromatin accessibility underlies synthetic lethality of SWI/SNF subunits in ARID1A-mutant cancers](https://elifesciences.org/articles/30506#content)" looking for potential PD markers as well as what an ATAC-seq profile looks like. This paper has ATACseq results of ARID1A-/- cancers with ARID1B KD. 
 
-data from GEO series:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975)
-
-Biological context (N=2):  TOV21G, HCT116
-
-wild type and modified with stable ARID1A KO
-
-Perturbagens (N=1):  shRNA KD of ARID1B
-
-Doses (N/A):  just the shRNA no relevant dose
-
-Negative control (N=1):  wild type / untreated
-
+**Data from GEO series**:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975) <br/>
+Biological context (N=2):  TOV21G, HCT116 <br/>
+wild type and modified with stable ARID1A KO <br/>
+Perturbagens (N=1):  shRNA KD of ARID1B <br/>
+Doses (N/A):  just the shRNA no relevant dose <br/>
+Negative control (N=1):  wild type / untreated <br/>
 Replicates:  N=2
 
 
