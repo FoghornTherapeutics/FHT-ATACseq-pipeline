@@ -127,6 +127,12 @@ This part of the downstream analysis compares reads at regions that are meaningf
    * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B KD) showed little effect of chromatin accessibility.
    ![](images/output_results/peak_dist_boxplot.JPG)
 
+   * The upset plot shows overlap between ARID1A KO and ARID1B KD in ARID1A-/- HCT116 cells:
+     
+   ![](images/output_results/Upset_plot_down.JPG)
+   ![](images/output_results/Upset_plot_up.JPG)
+
+
      
 4) Genome location: Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
 
