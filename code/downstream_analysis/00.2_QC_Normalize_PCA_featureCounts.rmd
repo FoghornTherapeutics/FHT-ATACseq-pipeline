@@ -1,0 +1,94 @@
+
+---
+title: "ATAC-seq DPA (differential peak area) pipeline"
+author: "fuzan@foghorntx.com"
+date: "2/1/2021"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = FALSE, message = FALSE)
+```
+
+
+```{r}
+library(edgeR)
+library(limma)
+# library(org.Hs.eg.db)
+library(RColorBrewer)
+library(proxy)
+library(filesstrings)
+
+# library(fhtbioinfR)
+```
+
+```{r}
+experiment_id <- "NS-23.0061"
+metadata_subdir <- paste0('/home/fuzan/fht.samba.data/experiments/ATACseq/', experiment_id, '/analysis/metadata/')
+All_samples_dir <- '../All_samples/'
+generic_title <- "ATAC-seq"
+```
+
+```{r}
+getwd()
+setwd(paste0('/home/fuzan/compbio_tools/', experiment_id, '/',  experiment_id, '_analysis_code'))
+# setwd(paste0('/home/fuzan/fht.samba.data/experiments/ATACseq/', experiment_id, '/analysis_with_all_samples/',  experiment_id, '_analysis_code'))
+getwd()
+```
+
+
+```{r}
+# Load metadata and contrast dataframes
+print("Check for existence of input files")
+
+input_metadata_file <- paste0(metadata_subdir,  list.files(metadata_subdir, pattern ="_metadata_r"))
+paste("input_metadata_file directory:  ", input_metadata_file, "- file.exists(input_metadata_file):  ", file.exists(input_metadata_file))
+
+
+input_contrasts_file <- paste0(metadata_subdir,  list.files(metadata_subdir, pattern ="_contrasts_r"))
+paste("input_metadata_file directory:  ", input_contrasts_file, "- file.exists(input_contrasts_file):  ", file.exists(input_contrasts_file))
+
+paste("All_samples directory:  ", All_samples_dir, "- dir exists All_samples_dir:  ", file.exists(All_samples_dir))
+
+```
+
+
+```{r}
+# Load featureCounts for all narrowPeak for PCA plot
+All_samples_featureCounts <- read.table(paste0(All_samples_dir, 'All_samples.txt'), sep = '\t', header=TRUE) #, index_col=0)
+rownames(All_samples_featureCounts) <- All_samples_featureCounts$peak_id
+head(All_samples_featureCounts)
+
+```
+
+
+
+
+```{r}
+# # Compute DPA file for each contrasts
+peak_definition_columns_in_peak_area_files <- c("peak_id","chr", "start", "end")
+just_data_df <- All_samples_featureCounts[ , -which(names(All_samples_featureCounts) %in% peak_definition_columns_in_peak_area_files)]
+head(just_data_df)
+
+# normalize data with calcNormFactors
+sample_colnames <- colnames(just_data_df)
+cur_dgeList <- DGEList(just_data_df)
+cur_dgeList <- calcNormFactors(cur_dgeList, method= 'TMM')
+
+output_filepath <- file.path(paste0(All_samples_dir, 'normalized_all_samples.txt'))
+paste("writing normalized featureCounts for all samples to output_filepath:  ", output_filepath)
+write.table(cur_dgeList, file=output_filepath, quote = F, sep="\t", col.names = NA)
+
+# log2 transformation on counts
+log2_norm_counts <- log2(cpm(cur_dgeList) +1)
+head(log2_norm_counts)
+
+output_filepath <- file.path(paste0(All_samples_dir, 'log2_cpm_normalized_all_samples.txt'))
+paste("writing log2 cpm normalized featureCounts for all samples to output_filepath:  ", output_filepath)
+write.table(log2_norm_counts, file=output_filepath, quote = F, sep="\t", col.names = NA)
+```
+
+
+
+
+### END ###

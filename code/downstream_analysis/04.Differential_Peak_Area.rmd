@@ -1,0 +1,199 @@
+
+---
+title: "ATAC-seq DPA (differential peak area) pipeline"
+author: "fuzan@foghorntx.com"
+date: "2/1/2021"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = FALSE, message = FALSE)
+```
+
+
+```{r}
+library(edgeR)
+library(limma)
+library(org.Hs.eg.db)
+library(RColorBrewer)
+library(proxy)
+library(filesstrings)
+
+# library(fhtbioinfR)
+```
+
+```{r}
+experiment_id <- "NS-23.0061"
+
+getwd()
+setwd(paste0('/home/fuzan/compbio_tools/', experiment_id, '/',  experiment_id, '_analysis_code'))
+getwd()
+
+
+metadata_subdir <- paste0('/home/fuzan/fht.samba.data/experiments/ATACseq/', experiment_id, '/analysis/metadata/')
+paste("metadata_subdir directory:  ", metadata_subdir, "- dir exists featureCounts_dir:  ", file.exists(metadata_subdir))
+
+featureCounts_dir <-'../featureCounts/'
+paste("featureCounts_dir directory:  ", featureCounts_dir, "- dir exists featureCounts_dir:  ", file.exists(featureCounts_dir))
+```
+
+
+```{r}
+# create directory for dpa files
+dpa_subdir <- "../dpa_data"
+create_dir(dpa_subdir)
+```
+
+
+```{r}
+# Load metadatada dataframe
+input_metadata_file <- paste0(metadata_subdir,  list.files(metadata_subdir, pattern ="_metadata_r"))
+paste("input_metadata_file directory:  ", input_metadata_file, "- file.exists(input_metadata_file):  ", file.exists(input_metadata_file))
+
+# Read metadata dataframe and set index/rownames
+metadata_df <- read.csv(input_metadata_file, header=TRUE, stringsAsFactors = FALSE, sep="\t")
+rownames(metadata_df) <- metadata_df$sample_id
+metadata_df$sample_id <- NULL
+head(metadata_df)
+
+# Load contrast dataframe
+input_contrasts_file <- paste0(metadata_subdir,  list.files(metadata_subdir, pattern ="_contrasts_r"))
+paste("input_metadata_file directory:  ", input_contrasts_file, "- file.exists(input_contrasts_file):  ", file.exists(input_contrasts_file))
+
+# Read contrast dataframe and set index/rownames
+contrasts_df <- read.csv(input_contrasts_file, header=TRUE, stringsAsFactors = FALSE, sep="\t")
+rownames(contrasts_df) <- contrasts_df$contrast
+# contrasts_df$contrast <- NULL
+# contrasts_df$X <- NULL
+head(contrasts_df)
+```
+
+
+
+```{r}
+# read count_data_df and add to countdata_list
+countdata_list = list()
+
+for (cur_contrast in rownames(contrasts_df)) {
+  print(paste('cur_contrast:', cur_contrast))
+  
+  # Read count data file path (featureCounts)
+  featureCounts_file_name <- paste0(gsub(" - ", "_", cur_contrast), '.txt')
+  featureCounts_file <- paste0(featureCounts_dir, featureCounts_file_name)
+  print(paste("featureCounts file:  ", featureCounts_file, "- file.exists(featureCounts_file):  ", file.exists(featureCounts_file)))
+  
+  # Read file
+  count_data_df <- read.csv(featureCounts_file, sep="\t")
+  
+  # Add peak_id as a rowname
+  rownames(count_data_df) <- count_data_df$peak_id
+  print(head(count_data_df))
+
+  countdata_list[[cur_contrast]] <- count_data_df  
+  print('')
+}
+```
+
+
+
+```{r}
+# Compute DPA file for each contrasts
+topTable_list <- list()
+summary_list <- list()
+peak_definition_columns_in_peak_area_files <- c("peak_id","chr", "start", "end")
+for (cur_contrast in rownames(contrasts_df)) {
+  print(paste('cur_contrast:', cur_contrast))
+  
+  # read count_data_df from countdata_list
+  count_data_df <- countdata_list[[cur_contrast]]
+  just_data_df <- count_data_df[ , -which(names(count_data_df) %in% peak_definition_columns_in_peak_area_files)]
+  
+  # normalize data with calcNormFactors
+  sample_colnames <- colnames(just_data_df)
+  cur_dgeList <- DGEList(just_data_df)
+  cur_dgeList <- calcNormFactors(cur_dgeList, method= 'TMM')
+
+  # log2 transformation on counts
+  log2_norm_counts <- log2(cpm(cur_dgeList) +1)
+
+  group_factor <- factor(metadata_df[sample_colnames, "group"])
+
+  my_model_matrix <- model.matrix(~0 + group_factor)
+  colnames(my_model_matrix) <- gsub("|", "_", levels(group_factor), fixed = T)
+  colnames(my_model_matrix)<-trimws(colnames(my_model_matrix))
+
+  my_contrasts <- makeContrasts(contrasts=cur_contrast, levels=my_model_matrix)
+
+  my_lmFit <- lmFit(log2_norm_counts, design=my_model_matrix)
+  my_contrasts_fit <- contrasts.fit(my_lmFit, my_contrasts)
+  my_contrasts_fit <- eBayes(my_contrasts_fit, trend=TRUE, robust=TRUE)
+  my_decideTests <- decideTests(my_contrasts_fit)
+  my_summary_decideTests <- summary(my_decideTests)
+  summary_list[[cur_contrast]] <- my_summary_decideTests
+
+  my_topTable <- topTable(my_contrasts_fit, coef=1, sort.by="p" ,n='Inf', adjust.method = "BH", confint = TRUE)
+
+  t <- count_data_df[rownames(my_topTable), peak_definition_columns_in_peak_area_files]
+  result_df <- cbind(t, my_topTable)
+  print(head(result_df))
+
+  topTable_list[[cur_contrast]] <- result_df
+ }
+```
+
+
+```{r}
+# Add the name of the DPA file for each contrasts in contrast_df
+# Save DPA files in dpa_subdir (./dpa_data) for each contrast
+contrasts_df$dpa_filename <- NA
+contrasts_df
+
+for (cur_contrast in rownames(contrasts_df)) {
+  print(cur_contrast)
+  
+  cur_topTable <- topTable_list[[cur_contrast]] 
+  cur_file_friendly_name <- contrasts_df[cur_contrast, "file_friendly_name"]
+
+  output_filename <- paste(experiment_id, "_", cur_file_friendly_name, "_", "DPA", "_r",  dim(cur_topTable)[1], "x", 
+                           dim(cur_topTable)[2], ".txt", sep="")
+  
+  contrasts_df[cur_contrast, "dpa_filename"] <- output_filename
+  
+  output_filepath <- file.path(dpa_subdir, output_filename)
+  print(paste("writing differential gene expression statistics (logFC etc.) output to:", output_filepath))
+
+  t <- data.frame( cur_topTable)
+  colnames(t) <- gsub(".", "_", colnames(t), fixed = T)
+
+ write.table(t, output_filepath, sep="\t", quote = F, row.names = F)
+}
+```
+
+
+```{r}
+# Format summary_dpa_df for differential_peak_area_counts table
+summary_names <- names(summary_list)
+t <- summary_list[[summary_names[1]]]
+for (cur_name in summary_names[2:length(summary_names)]) {
+  t <- cbind(t, summary_list[[cur_name]])  
+}
+summary_dpa_df <- t
+summary_dpa_df
+```
+
+```{r}
+# Save differential_peak_area_counts table with all contrasts in one txt file
+output_filename <- paste(experiment_id, "_differential_peak_area_counts_r", 
+                         dim(summary_dpa_df)[1], "x", dim(summary_dpa_df)[2], ".txt", sep="")
+output_filepath <- file.path(dpa_subdir, output_filename)
+paste("writing summary_dpa_df (of dpa counts) to output_filepath:  ", output_filepath)
+write.table(summary_dpa_df, file=output_filepath, quote = F, sep="\t", col.names = NA)
+```
+
+
+```{r}
+# renv::settings$snapshot.type("all")
+# lockfile <- paste(experiment_id, "_02_differential_peak_area_renv.lock", sep="")
+# lockfile
+# renv::snapshot(lockfile=lockfile) 
+```
