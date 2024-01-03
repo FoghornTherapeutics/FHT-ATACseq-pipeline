@@ -1,0 +1,29 @@
+# Rule looks at quality of the samples
+
+rule run fastqc:
+       threads: N 
+       input:
+         r1= temp(FASTQS_DIR + "{sample}_1.trimmed.fq.gz"),
+         r2= temp(FASTQS_DIR + "{sample}_2.trimmed.fq.gz")
+       output:
+         r1= FASTQC_DIR + "{sample}_1.trimmed_fastqc.zip",
+         r2= FASTQC_DIR + "{sample}_2.trimmed_fastqc.zip"
+       message: 
+         """fastqc:  --- Quality check of raw data with Fastqc."""
+       threads: N
+       run:
+         print("input.r1:")
+         print("\n".join(input.r1))
+         print("input.r2:")
+         print("\n".join(input.r2))
+         shell("fastqc  -f fastq -t {N} {input.r1} {input.r2}  --outdir {FASTQC_DIR}")
+
+
+rule run_all_fastqc:
+    input:
+        EXPECTED_FASTQC_FILES
+    message:
+        "run_all_fastqc - rule to allow running fastqc as direct target"
+    run:
+       print("running rule run_all_fastqc")
+

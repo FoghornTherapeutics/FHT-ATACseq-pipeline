@@ -1,0 +1,32 @@
+# Rule mark and remove duplicates from sequence aftre alignment
+
+#include:"Snakefile_setup_ATAC"
+
+rule mark_duplicates:
+    input:
+        BAM_DIR + "{sample}.FILT.BAM"
+    output:
+#        bam=BAM_DIR + "{sample}.DEDUP.BAM",
+#        log=BAM_DIR + "{sample}.dup.log"
+        bam=temp(BAM_DIR + "{sample}.DEDUP.BAM"),
+        log=temp(BAM_DIR + "{sample}.dup.log")
+    shell:("picard MarkDuplicates INPUT={input} OUTPUT={output.bam} METRICS_FILE={output.log} VALIDATION_STRINGENCY=LENIENT ASSUME_SORTED=true REMOVE_DUPLICATES=false ")
+
+
+
+rule remove_duplicates:
+    input:
+        BAM_DIR + "{sample}.DEDUP.BAM"
+    output:
+        bam=BAM_DIR + "{sample}.FINAL.BAM",
+        bai=BAM_DIR + "{sample}.FINAL.BAM.bai"
+    shell:("samtools view -F 1804 -f 2 -b {input} -o {output.bam}&& samtools index -@ {N} {output.bam}")
+
+
+rule run_all_duplicates:
+    input:
+        EXPECTED_DUPLICATE_FILES
+    message:
+        "run all_duplicates - rule to allow running mark_duplicates and remove_duplicates as direct target"
+    run:
+        print("running rule all_duplicates")

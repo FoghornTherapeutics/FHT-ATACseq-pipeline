@@ -1,0 +1,18 @@
+##### Create sample_group_IDs #####
+
+
+cd fastqs
+
+echo check for pairs
+ls -1 | sed 's/_[1,2].fq.gz//' | grep -v check_for_paired_fastq | sort | uniq -c &> check_for_paired_fastq
+cat check_for_paired_fastq
+echo check if any of above are not 2:
+grep -v " 2 " check_for_paired_fastq &> num_check_for_paired_fastq || true  # added || true at the end because grep has exit code of 1 when nothing found which is the normal expected behavior for this search
+cat num_check_for_paired_fastq
+wc -l num_check_for_paired_fastq
+mv check_for_paired_fastq num_check_for_paired_fastq ../code
+
+ls -1 | sed 's/_[1,2].fastq//' | sort -u > ../sample_IDs.grp
+
+cd ..
+

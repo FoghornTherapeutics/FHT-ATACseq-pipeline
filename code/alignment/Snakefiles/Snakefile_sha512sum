@@ -1,0 +1,40 @@
+#File to run sha512sum
+
+EXPECTED_TEMP_INDIV_SHA512SUM_PATTERN = os.path.join(CODE_DIR, "indiv_sha512_{sample}_{pair_index}.txt")
+#fht_logger.debug("EXPECTED_TEMP_INDIV_SHA512SUM_PATTERN:  {}".format(EXPECTED_TEMP_INDIV_SHA512SUM_PATTERN))
+
+EXPECTED_TEMP_INDIV_SHA512SUM = expand(EXPECTED_TEMP_INDIV_SHA512SUM_PATTERN, sample=SAMPLES, pair_index=[1,2])
+#fht_logger.debug("EXPECTED_TEMP_INDIV_SHA512SUM[:3]:  {}".format(EXPECTED_TEMP_INDIV_SHA512SUM[:3]))
+
+EXPECTED_SHA512SUM = "sha512sum_fastq.txt"
+
+do_run_sha512sum = ("True" == config["do_run_sha512sum"])
+#fht_logger.debug("do_run_sha512sum:  {}".format(do_run_sha512sum))
+#fht_logger.debug("")
+
+
+rule fastq_sha512sum:
+    input:
+        os.path.join(FASTQS_DIR, "{sample}_{pair_index}.fastq")
+    output:
+        temp(EXPECTED_TEMP_INDIV_SHA512SUM_PATTERN)
+    resources:
+        sha512sum_file_num=1
+    run:
+        print("rule fastq_sha512sum")
+        if do_run_sha512sum:
+            shell("sha512sum {input} > {output}")
+        else:
+            print("do_run_sha512sum is False therefore not really running sha512sum just touching expected output file")
+            shell("touch {output}")
+
+rule run_all_fastq_sha512sum:
+    input:
+        EXPECTED_TEMP_INDIV_SHA512SUM
+    output:
+        EXPECTED_SHA512SUM
+    message:
+        "run_all_fastq_sha512sum - running all fastq_sha512sum"
+    run:
+        print("running rule run_all_fastq_sha512sum")
+        shell("cat {input} | sort -k2 > {output}")

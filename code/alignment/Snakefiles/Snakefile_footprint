@@ -1,0 +1,35 @@
+# Rule to get the footprint bed files and Finding motifs overlapping with predicted footprints
+
+include:'Snakefile_setup_ATAC'
+
+rule  Call_footprints:
+	input:
+		bam= BAM_DIR +"{sample}.small.chrsorted.BAM",
+		peak=MACS_DIR +"{sample}.filtered.narrowPeak"
+	output:
+		bam= FP_DIR + "{sample}.bed"
+	run:
+		cmd_bed = """set +u;source /home/ec2-user/anaconda3/bin/activate  footprint &&rgt-hint footprinting --atac-seq --paired-end --organism=hg38 --output-location={FP_DIR}  --output-prefix={wildcards.sample} {input.bam} {input.peak}"""
+		print(cmd_bed)
+		shell(cmd_bed)
+		 
+
+
+rule  motif_match_footprint:
+	input:
+		bed=FP_DIR + "{sample}.bed"
+	output:
+		bam=FP_DIR + "{sample}_mpbs.bed"
+	run:
+		cmd_motifs = """set +u;source /home/ec2-user/anaconda3/bin/activate  footprint &&rgt-motifanalysis matching --organism=hg38 --input-files {input} --output-location={FP_DIR}"""
+		print(cmd_motifs)
+		shell(cmd_motifs)
+
+rule run_all_footprint:
+	input:
+		EXPECTED_FOOTPRINT_FILES
+	message:
+		"run_all_footprint - rule to get mpbs bed files"
+	run:
+		print("running rule run_all_footprint")
+

@@ -1,0 +1,22 @@
+# Rule to filter nucleosome free regions
+
+rule  create_nucleosome_free:
+	input:
+		bam= BAM_DIR + "{sample}.FINAL.BAM"
+	output:
+		sam= temp(BAM_DIR + "{sample}.small.SAM")     
+	message:
+		"view -H copies the header only to the output, then add to the output file the filtered reads with >>"
+	run:
+		shell("""samtools view -H {input} > {output}""") 
+		shell(""" samtools view {input} |awk -F '\t' '{{if(($9>-{nucleosome_free_cutoff}) && ($9<{nucleosome_free_cutoff})) print $_}}' >> {output}""")
+
+
+rule run_all_nucleosome_free:
+	input:
+		EXPECTED_NUCLEOSOME_FREE_FILES
+	message:
+		"run_all_nucleosome_free - rule to allow running create_nucleosome_free"
+	run:
+		print("running rule run_all_nucleosome_free")
+

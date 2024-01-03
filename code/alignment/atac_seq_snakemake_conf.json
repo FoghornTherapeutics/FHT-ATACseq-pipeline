@@ -1,0 +1,19 @@
+{
+	"experiment_id":"NS-23.0061",
+	"do_upload":"True",
+	"do_run_sha512sum":"True",
+	"assay_type":"ATACSeq", 
+	"options for assay_type": "ATACSeq or NICESeq",
+	
+	"metadata_df":"../analysis/metadata/NS-23.0061_metadata_r12x34.txt",
+	"wkdir":"",
+
+	"machine_threads":128,
+	
+        "sample_IDs_grp_file":"sample_IDs.grp",
+
+	"ref_genome_dir":"/mnt/ATAC_pipeline/ref_genomes/human/",
+	"ref_genome_basename":"GRCh38.primary_assembly.genome"
+	
+
+}   

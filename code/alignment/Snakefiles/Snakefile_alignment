@@ -1,0 +1,57 @@
+# Rule trim remove adapter from sequence coming from ATAC-seq process
+
+#include:"Snakefile_setup_ATAC"
+
+
+rule bowtie_align:
+      input:
+         r1= FASTQS_DIR + "{sample}_1.trimmed.fq.gz",
+         r2= FASTQS_DIR + "{sample}_2.trimmed.fq.gz" 
+      output:
+          bam= BAM_DIR + "{sample}.BAM",
+      message:"Alignment done with local and 4 multimappers because of type of input data"
+      threads: 32
+      shell:
+           ("bowtie2 -k 4 -X2000 --local --mm --threads {threads} -x {REF_GENOME} -1 {input.r1} -2 {input.r2} |samtools view -Su /dev/stdin | samtools sort -o {output.bam}")
+
+
+rule  filter_sort:
+       input:
+           BAM_DIR + "{sample}.BAM"
+       output:
+           temp(BAM_DIR + "{sample}.TMP.FILT.BAM")
+       threads: N
+       shell:
+            ("samtools view -F 524 -f 2 -@ {N} -u {input} | samtools sort -@ {N} -n /dev/stdin -o {output}")
+
+
+rule select_top_aligment:
+        input:
+            BAM_DIR + "{sample}.TMP.FILT.BAM"
+        output:
+            temp(BAM_DIR + "{sample}.TMP.FILT.FIXMATE.BAM")
+        threads: N
+        shell:
+           ("samtools view -h {input} | python src_code/assign_multimappers.py -k 4 --paired-end | samtools fixmate -r /dev/stdin {output}")
+
+
+rule filter_sort_top_alignment:
+     input:
+         BAM_DIR + "{sample}.TMP.FILT.FIXMATE.BAM"
+     output:
+         temp(BAM_DIR + "{sample}.FILT.BAM")
+     threads: N 
+     shell:
+       ("samtools view -F 1804 -f 2 -@ {N} -u {input} | samtools sort -@ 6 /dev/stdin -o {output}")
+
+
+
+
+rule run_all_alignment:
+     input:
+        EXPECTED_ALIGNMENT_FILES
+     message:
+        "run_all_alignment - rule to allow bowtie_align, filter_sort, select_top_alignment, filter_sort_top_alignement"
+     run:
+        print("running rule run_all_alignment")
+

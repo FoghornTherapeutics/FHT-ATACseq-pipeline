@@ -1,0 +1,87 @@
+# Rule to position sort SAM file, shift ATAC reads and call peaks (+FE change of peaks and backgroud)
+
+#include:'Snakefile_setup_ATAC'
+
+rule  small_name_sort:
+	input:
+		sam=BAM_DIR + "{sample}.small.SAM",
+	output:
+		bam=temp(BAM_DIR + "{sample}.small.nsorted.BAM"),	
+	threads: N
+	shell:("""samtools sort -n -@ {N} {input} -o {output}""")
+
+ 
+rule  index_small_bam:
+	input:
+		bam=BAM_DIR + "{sample}.small.nsorted.BAM",
+	output:
+		bam=BAM_DIR + "{sample}.small.chrsorted.BAM",
+		bai=BAM_DIR + "{sample}.small.chrsorted.BAM.bai"
+	threads: N
+	run:
+		cmd_chrsort="""samtools sort -@ {N} {input} -o {output.bam}"""
+		print("cmd_chrsort: {}".format(cmd_chrsort))
+		shell(cmd_chrsort)
+		cmd_index="""samtools index -@ {N} {output.bam} {output.bai}"""
+		print("cmd_index: {}".format(cmd_index))
+		shell(cmd_index)
+
+
+
+rule Convert_to_BEDPE_TA_and_call_peaks:
+	input:
+		BAM_DIR + "{sample}.small.nsorted.BAM"
+	output:
+		treat= temp(MACS_DIR + "{sample}_treat_pileup.bdg"),
+		control= temp(MACS_DIR + "{sample}_control_lambda.bdg"),
+		all= MACS_DIR +"{sample}_peaks.narrowPeak",
+	run:	
+		if assay_type == 'ATACSeq':
+			cmd_bedpe = """bedtools bamtobed -bedpe -mate1 -i {input} | gzip -nc > {BAM_DIR}{wildcards.sample}.small.BEDPE"""
+			print("cmd_bedpe: {}".format(cmd_bedpe))
+			shell(cmd_bedpe)
+
+			cmd_small = """zcat {BAM_DIR}{wildcards.sample}.small.BEDPE| grep -v 'chrM'|awk 'BEGIN{{OFS="\\t"}}{{printf "%s\\t%s\\t%s\\tN\\t1000\\t%s\\n%s\\t%s\\t%s\\tN\\t1000\\t%s\\n",$1,$2,$3,$9,$4,$5,$6,$10}}' | gzip -nc > {BAM_DIR}{wildcards.sample}.small.TA"""
+			print("cmd_small: {}".format(cmd_small))
+			shell(cmd_small)
+
+			cmd_shifted =  """zcat {BAM_DIR}{wildcards.sample}.small.TA |awk -F $'\\t' 'BEGIN {{OFS = FS}}{{ if ($6 == "+") {{$2 = $2 + 4}} else if ($6 == "-") {{$3 = $3 - 5}} print $0}}' | gzip -nc > {BAM_DIR}{wildcards.sample}.small.shifted.TA"""
+			print("cmd_shifted: {}".format(cmd_shifted))
+			shell(cmd_shifted)
+		
+			cmd_call_peak_ATAC = """set +u;source /home/ec2-user/anaconda3/bin/activate  py2 &&macs2 callpeak -t {BAM_DIR}{wildcards.sample}.small.shifted.TA -f BED -n {wildcards.sample} -g hs -p 0.01 --shift -75 --extsize 150 --nomodel -B --SPMR --keep-dup all --call-summits --outdir {MACS_DIR}"""
+			print("cmd_call_peak_ATAC: {}".format(cmd_call_peak_ATAC))
+			shell(cmd_call_peak_ATAC)
+ 
+		elif assay_type == 'NICESeq':
+			cmd_call_peak_NICE = """set +u;source /home/ec2-user/anaconda3/bin/activate  py2 &&macs2 callpeak -t {input} -f BAMPE -n {wildcards.sample} -g hs -p 0.01 --shift -75 --extsize 150 --nomodel -B --SPMR --keep-dup all --call-summits --outdir {MACS_DIR}"""
+			print("cmd_call_peak_NICE: {}".format(cmd_call_peak_NICE))
+			shell(cmd_call_peak_NICE)
+		else:
+			msg = "PROBLEM ON THE ASSAY TYPE"
+			print(msg)
+			raise Exception(msg)
+
+
+
+rule filter_peak_file:
+        input:
+                MACS_DIR + "{sample}_peaks.narrowPeak"
+	message:"Remove chromosome names that are chr1:22 or chrX and chrY"
+        output:
+                MACS_DIR + "{sample}.filtered.narrowPeak"
+	shell:(""" grep "^chr[0-9XY]"   {input} > {output}""" )
+
+
+rule run_all_peaks:
+	input:
+		EXPECTED_NARROWPEAK, 
+		EXPECTED_INDEXED_BAM
+	message:
+		"run_all_peaks - rule to allow running small_final_sort, index_bam, Convert_to_BEDPE_TA_and_call_peaks, calL_peak_FE as direct target"
+	run:
+		print("running rule run_all_peaks")
+
+
+
+

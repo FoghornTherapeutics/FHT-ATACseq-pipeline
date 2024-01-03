@@ -1,0 +1,53 @@
+# This Snakefile takes sample fastqs as input and outputs aligment files "bams",quality control files "fastqc and multiqc" and coverage files "bigwig files"
+
+
+### config files with sample information ###
+configfile:"atac_seq_snakemake_conf.json"
+
+include: "Snakefile_setup_ATAC"
+
+include: "Snakefile_sha512sum"
+include: "Snakefile_fastqs"
+include: "Snakefile_fastqc"
+include: "Snakefile_alignment"
+include: "Snakefile_duplicates"
+include: "Snakefile_multiqc"
+include: "Snakefile_nucleosome_free"
+include: "Snakefile_call_peaks"
+include: "Snakefile_bigwig"
+include: "Snakefile_footprint"
+include: "Snakefile_merge_bam_files"
+include: "Snakefile_IDR"
+include: "Snakefile_FRiP"
+include: "Snakefile_post_alignment"
+
+rule all:
+	input:
+		"alignment_conda_environment.yml"
+
+
+rule all_samples:
+	input:
+		EXPECTED_SHA512SUM,
+		EXPECTED_FASTQS_FILES,
+		EXPECTED_FASTQC_FILES,
+		EXPECTED_ALIGNMENT_FILES,
+		EXPECTED_DUPLICATE_FILES,
+		MULTIQC_REPORT_FILE,
+		EXPECTED_NUCLEOSOME_FREE_FILES,	
+		EXPECTED_INDEXED_BAM,
+		EXPECTED_NARROWPEAK, 
+		EXPECTED_BW,   
+		EXPECTED_FOOTPRINT_FILES,
+
+		EXPECTED_MERGED_BAM_FILES,
+		EXPECTED_MERGED_NUCLEOSOME_FREE_FILES,
+		EXPECTED_MERGED_INDEXED_BAM,
+		EXPECTED_MERGED_NARROWPEAK, 
+		EXPECTED_MERGED_BW,  
+		CODE_DIR + "expected_IDR_rule_finished",
+		"FRiP_table.txt"	
+	output:
+		CODE_DIR + "all_pipeline_done"
+	shell:
+		"touch {output}"	

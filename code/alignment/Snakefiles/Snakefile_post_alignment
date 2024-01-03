@@ -1,0 +1,53 @@
+# Rule to check on the pipeline after it ran
+
+rule check_for_errors_in_log_file:
+	input:
+		CODE_DIR + "all_pipeline_done"
+	output:
+		CODE_DIR + "check_for_errors_snakemake_log.txt"
+	run:
+		shell(""" log_file="nohup.out" &&
+			echo ${{log_file}} &&
+			echo "checking for errors in log_file:  $log_file" &&
+			#grep "Will exit" ${{log_file}} &&
+			#grep -i exception ${{log_file}} &&
+			#grep -i error ${{log_file}} &&
+			echo "if nothing above this, no error messages found" """)	
+
+		shell("touch {output}")
+
+
+rule aws_s3_upload_all_alignment:
+	input:
+		CODE_DIR + "check_for_errors_snakemake_log.txt"
+	output:
+		"alignment_conda_environment.yml"
+	run:
+		shell("""conda list > {output}""")
+		
+		shell(""" echo {EXPERIMENT_ID} &&
+			code_dir_name='{EXPERIMENT_ID}_alignment_code' &&
+			echo ${{code_dir_name}} &&
+			mkdir ${{code_dir_name}} &&
+
+			cp -r src_code/Snakefiles ${{code_dir_name}} &&
+			cp -r src_code/setup_cleaning_scripts ${{code_dir_name}} &&
+			cp  src_code/assign_multimappers.py {output} atac_seq_snakemake_conf.json sample_IDs.grp alignment_conda_environment.yml ${{code_dir_name}} &&
+
+			code_dir_name_tgz=${{code_dir_name}}.tgz &&
+			echo $code_dir_name_tgz &&
+			tar -cvzf  ${{code_dir_name_tgz}} ${{code_dir_name}} 
+			
+			rm bam/*.BEDPE
+			rm bam/*.TA""")
+	
+		s3_dest_url = "s3://bucket-fht-samba-data/experiments/ATACseq/{}/alignment/".format(EXPERIMENT_ID)
+		print("s3_dest_url:  {}".format(s3_dest_url))
+
+		if "True" == config["do_upload"]:
+			aws_upload_cmd = """aws s3 sync --no-progress --no-follow-symlinks ../alignment {}""".format(s3_dest_url)
+			print("aws_upload_cmd:  {}".format(aws_upload_cmd))
+			shell(aws_upload_cmd)
+
+
+

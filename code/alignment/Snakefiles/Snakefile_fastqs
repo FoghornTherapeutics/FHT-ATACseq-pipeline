@@ -1,0 +1,33 @@
+# Rule trim remove adapter from sequence coming from ATAC-seq process
+
+include:'Snakefile_setup_ATAC'
+
+rule trim_fastqs:
+    threads: N
+    input:
+        r1= FASTQS_DIR + "{sample}_1.fastq",
+        r2= FASTQS_DIR + "{sample}_2.fastq"
+
+    output:
+         r1= FASTQS_DIR + "{sample}_1.trimmed.fq.gz",
+         r2= FASTQS_DIR + "{sample}_2.trimmed.fq.gz"
+    message:
+         """Trimmed fastq files can be compressed"""
+    run:
+        print("input.r1:")
+        print("\n".join(input.r1))
+        print("input.r2:")
+        print("\n".join(input.r2))
+
+        shell("cutadapt -m 5 -e 0.2 -a {ADAPTER} -A {ADAPTER} -o {output.r1} -p {output.r2} {input.r1} {input.r2} --cores={N}")
+
+
+
+
+rule run_all_trim_fastqs:
+    input:
+        EXPECTED_FASTQS_FILES
+    message:
+        "run_all_trim_fastqs - rule to trim fastq files"
+    run:
+       print("running rule run_all_trim_fastqs")

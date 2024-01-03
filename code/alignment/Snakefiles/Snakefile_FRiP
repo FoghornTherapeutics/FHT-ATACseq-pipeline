@@ -1,0 +1,94 @@
+#Rule to compute FRiP = # reads in the peaks / # reads in BAM files
+
+#include:"Snakefile_setup_ATAC"
+
+
+import pandas as pd
+
+
+rule  index_FINAL_bam:
+	input:
+		bam=BAM_DIR + "{sample}.FINAL.BAM",
+	output:
+		bam=BAM_DIR + "{sample}.FINAL.chrsorted.BAM",
+		bai=BAM_DIR + "{sample}.FINAL.chrsorted.BAM.bai"
+	threads: N
+	run:
+		cmd_chrsort="""samtools sort -@ {N} {input} -o {output.bam}"""
+		print("cmd_chrsort: {}".format(cmd_chrsort))
+		shell(cmd_chrsort)
+		cmd_index="""samtools index -@ {N} {output.bam} {output.bai}"""
+		print("cmd_index: {}".format(cmd_index))
+		shell(cmd_index)
+
+
+rule run_sample_FRiP:
+	input:
+		bam=os.path.join(BAM_DIR, "{sample}.FINAL.chrsorted.BAM"),
+		bed=os.path.join(MACS_DIR, "{sample}.filtered.narrowPeak"),
+	output:
+		result=temp("temp_{sample}_FRiP"),
+		temp_intersect=temp("temp_run_sample_FRIP_intersect_{sample}")
+	params:
+		sample="{sample}"
+	resources:
+		FRiP_run_num=1
+# limiting the above running of FRiP because of this note from bedtools intersect and observed high memory usage
+# https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html
+# "If you are trying to intersect very large files and are having trouble with excessive memory usage, 
+# please presort your data by chromosome and then by start position 
+# (e.g., sort -k1,1 -k2,2n in.bed > in.sorted.bed for BED files) and then use 
+# the -sorted option. This invokes a memory-efficient algorithm designed for large files. 
+# This algorithm has been substantially improved in recent (>=2.18.0) releases."
+
+#	threads: N
+	run:
+		sample=params.sample
+		print("sample: {}".format(sample))
+		print("input.bed: {}".format(input.bed))
+		print("input.bam: {}".format(input.bam))
+		
+		print("output.temp_intersect:  {}".format(output.temp_intersect))
+		print("output.result:  {}".format(output.result))
+
+		shell("""echo "sample_ID\tdata_type\tvalue" > {output.result}""")
+		cmd_nb_all_reads = """samtools view -c {} """.format(input.bam)
+		# -c, --count: Instead of printing the alignments, only count them and print the total number.
+		print("cmd_nb_all_reads: {}".format(cmd_nb_all_reads))
+		shell("""echo "{sample}\tall_reads\t$({cmd_nb_all_reads})" >> {output.result}""")
+		
+		cmd_get_intersect = """bedtools intersect -a {} -b {} -f 0.20 -c > {}""".format(input.bed, input.bam, output.temp_intersect)
+		print("cmd_get_intersect:  {}".format(cmd_get_intersect))
+		shell(cmd_get_intersect)
+
+		cmd_nb_reads_peak = """awk -F '\t' '{{SUM+=$NF}}END{{print SUM}}' {}""".format(output.temp_intersect)
+		# -c For each entry in A, report the number of hits in B while restricting to -f. Reports 0 for A entries that have no overlap with B.
+		# -f Minimum overlap required as a fraction of A. Default is 1E-9 (i.e. 1bp).
+		print("cmd_nb_reads_peak: {}".format(cmd_nb_reads_peak))
+		shell("""echo "{sample}\tpeak_reads\t$({cmd_nb_reads_peak})" >> {output.result}""")
+
+rule run_table_FRiP:
+	input:
+		expand("temp_{sample}_FRiP",sample=SAMPLES)
+	output:
+		"FRiP_table.txt"
+	run:
+		temp_FRiP_df=pd.DataFrame(columns=['sample_ID','data_type','value']) 
+		for sample in SAMPLES:		
+			print("sample: {}".format(sample))
+			sample_FRiP_df=pd.read_csv("temp_"+sample+"_FRiP", header=0,sep='\t')
+			temp_FRiP_df=pd.concat([temp_FRiP_df, sample_FRiP_df])
+		df = temp_FRiP_df.pivot(index="sample_ID", columns="data_type", values="value")
+		df['FRiP'] = df['peak_reads']/df['all_reads']
+		df.to_csv('FRiP_table.txt', sep='\t')
+
+
+
+rule run_all_FRiP:
+	input:
+		"FRiP_table.txt"
+	message:
+		"run_all_FRiP - rule to allow running run_FRiP as direct target"
+	run:
+		print("run run_all_FRiP")
+

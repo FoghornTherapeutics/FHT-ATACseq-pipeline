@@ -1,0 +1,265 @@
+#Snakefile with common variables
+
+import os
+import json
+import itertools
+import pandas as pd
+
+
+
+
+###############################################
+###############################################
+
+
+configfile:"atac_seq_snakemake_conf.json"
+
+
+
+### Read sample IDs
+f = open(config["sample_IDs_grp_file"])
+SAMPLES = f.read().strip().split("\n")
+f.close()
+print("\nSAMPLES:", SAMPLES)
+
+
+### Build directories
+WKDIR = config["wkdir"]
+CODE_DIR =  os.path.join(WKDIR + "code/")
+FASTQS_DIR = os.path.join(WKDIR + "fastqs/")
+FASTQC_DIR =  os.path.join(WKDIR + "fastqc/")
+BAM_DIR =  os.path.join(WKDIR + "bam/")
+MULTIQC_DIR =  os.path.join(WKDIR + "multiqc/")
+MACS_DIR = os.path.join(WKDIR + "macs2/")
+COVERAGE_DIR = os.path.join(WKDIR + "coverage/")
+FP_DIR = os.path.join(WKDIR + "footprint_bed/")
+
+
+##############################################
+##############################################
+
+### calculate how many cores for various processes
+MACHINE_THREADS = config["machine_threads"]
+print("\nMACHINE_THREADS:", MACHINE_THREADS)
+
+threads_per_sample_ratio = MACHINE_THREADS / len(SAMPLES)
+print("threads_per_sample_ratio:", threads_per_sample_ratio)
+
+THREADS_PER_SAMPLE = round(threads_per_sample_ratio)
+print("THREADS_PER_SAMPLE:",  THREADS_PER_SAMPLE)
+
+
+FEATURE_COUNTS_THREADS = MACHINE_THREADS if MACHINE_THREADS <= 64 else 64
+print("FEATURE_COUNTS_THREADS:", FEATURE_COUNTS_THREADS)
+print()
+
+N = THREADS_PER_SAMPLE
+
+
+###############################################
+###############################################
+
+
+EXPERIMENT_ID = config["experiment_id"]
+assay_type = config["assay_type"]
+
+# check the assay type name either ATACSeq or NICESeq
+if assay_type == 'ATACSeq':
+	ADAPTER="CTGTCTCTTATA"
+	nucleosome_free_cutoff = 120
+	EXPECTED_FP_FILES = FP_DIR + "differential_statistics.txt"
+elif  assay_type =='NICESeq':
+	ADAPTER="AGATCGGAAGAGC"
+	nucleosome_free_cutoff = 600
+	EXPECTED_FP_FILES = "" 
+
+else:
+	msg = "PROBLEM ON THE ASSAY TYPE"
+	print(msg)
+	raise Exception(msg)
+
+print("assay_type:", assay_type)
+print('ADAPTER:', ADAPTER)
+print('nucleosome_free_cutoff:', nucleosome_free_cutoff)
+
+###############################################
+###############################################
+
+REF_GENOME_DIR = config["ref_genome_dir"]
+REF_GENOME_BASENAME = config["ref_genome_basename"]
+REF_GENOME = REF_GENOME_DIR + REF_GENOME_BASENAME
+print("REF_GENOME: {}".format(REF_GENOME))
+
+CHR_NAME_LENGTH = REF_GENOME_DIR + "chrNameLength.txt"
+print('CHR_NAME_LENGTH:', CHR_NAME_LENGTH)
+
+###############################################
+###############################################
+
+### Read metadata_df for groups and combinations (for IDR) ###
+
+# Read metadata_df 
+metadata_file = config['metadata_df']
+print('metadata_file: ', metadata_file)
+
+#metadata_df = pd.read_table(metadata_file, delimiter=',', index_col=0)
+metadata_df = pd.read_csv(metadata_file, sep ='\t', index_col=0)
+print('metadata_df.head(): ', metadata_df.head())
+
+
+# Add groups to mapping
+mapping = {}
+for group in metadata_df.group.unique():
+    t = metadata_df.loc[metadata_df.group == group]
+    cur_sample_ids = t.index.to_list()
+    mapping[group] = cur_sample_ids
+print("mapping : {}".format(mapping))
+
+GROUP = mapping.keys()
+print("\nGROUP: {}\n".format(GROUP))
+
+
+# Create dictionary of combinations of replicates within each group --> comb_dict ###
+# Needed for idr_samples.sh and filter.sh #
+combinations= {}
+for group in list(GROUP):
+        replicates = mapping[group]
+        all_combinations = [list(x) for x in itertools.combinations(replicates, 2)]
+        combinations[group] = all_combinations
+print("combinations: {}\n".format(combinations))
+
+###############################################
+###############################################
+
+# Create conditions for footprinting
+#conditions = {}
+#for condition in metadata_df.pert_type.unique():
+#    t = metadata_df.loc[metadata_df.pert_type == condition]
+#    cur_sample_ids = t.index.to_list()
+#    conditions[condition] = cur_sample_ids
+    
+#conditions['DMSO'] = conditions.pop('ctrl_vehicle')
+#conditions['FHT'] = conditions.pop('trt_cp')
+#print("conditions : {}".format(conditions))
+
+
+
+# Order samples for footprinting #
+#n_DMSO = len(conditions['DMSO'])
+#n_FHT = len(conditions['FHT'])
+#print("n_DMSO: {}\n".format(n_DMSO))
+#print("n_FHT: {}\n".format(n_FHT))
+#ordered_samples = conditions['DMSO'] + conditions['FHT']
+#print("ordered_samples: {}\n".format(ordered_samples))
+#ordered_conditions = n_DMSO * 'DMSO,' + (n_FHT - 1) * 'FHT,' + 'FHT'
+#print("ordered_conditions: {}\n".format(ordered_conditions))
+
+
+
+
+###############################################
+###############################################
+
+#### EXPECTED SAMPLE FILES ####
+
+## Snakefile_fastqs ##
+EXPECTED_FASTQS_FILES = expand(FASTQS_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+	extension=["_1.trimmed.fq.gz", "_2.trimmed.fq.gz"]
+)
+
+
+## Snakefile_fastqc ##
+EXPECTED_FASTQC_FILES = expand(FASTQC_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+	extension=["_1.trimmed_fastqc.zip", "_2.trimmed_fastqc.zip"]
+)
+
+
+## Snakefile_alignment ##
+EXPECTED_ALIGNMENT_FILES = expand(BAM_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+    extension=[".BAM", ".TMP.FILT.BAM", ".TMP.FILT.FIXMATE.BAM",  ".FILT.BAM"]
+)
+
+
+## Snakefile_duplicates ##
+EXPECTED_DUPLICATE_FILES = expand(BAM_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+	extension=[".DEDUP.BAM", ".dup.log", ".FINAL.BAM", ".FINAL.BAM.bai"]
+)
+
+
+## Snakefile_mutliqc ##
+MULTIQC_REPORT_FILE = MULTIQC_DIR + "multiqc_report.html"
+EXPECTED_MULTIQC_FILES = expand(BAM_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+	extension=[".FINAL.BAM.size.log"]
+)
+
+
+## Snakefile_nucleosome_free ##
+EXPECTED_NUCLEOSOME_FREE_FILES = expand(BAM_DIR+"{sample}{extension}",
+	sample=SAMPLES,
+	extension=[".small.SAM"]
+)
+
+
+## Snakefile_call_peaks ##
+EXPECTED_INDEXED_BAM = expand(BAM_DIR+"{sample}{extension}",
+        sample=SAMPLES,
+        extension=[".small.chrsorted.BAM", ".small.chrsorted.BAM.bai"] 
+)
+EXPECTED_NARROWPEAK = expand(MACS_DIR+"{sample}{extension}",
+        sample=SAMPLES,
+        extension=[".filtered.narrowPeak"]
+)
+
+
+## Snakefile_bigwig ##
+EXPECTED_BW = expand(COVERAGE_DIR +"{sample}{extension}",
+	sample=SAMPLES,
+	extension=[".no_norm.bw", ".bw"]
+)
+
+## Snakefile_footprint ##
+EXPECTED_FOOTPRINT_FILES = expand(FP_DIR +"{sample}{extension}",
+        sample=SAMPLES,
+        extension=["_mpbs.bed"]
+)
+
+###############################################
+###############################################
+
+#### EXPECTED GROUP FILES ####
+
+## Snakefile_merge_bam_files ##
+EXPECTED_MERGED_BAM_FILES = expand(BAM_DIR+"{group}{extension}",
+	group=GROUP,
+	extension=[".FINAL.BAM"]
+)
+
+
+## Snakefile_nucleosome_free ##
+EXPECTED_MERGED_NUCLEOSOME_FREE_FILES = expand(BAM_DIR+"{group}{extension}",
+	group=GROUP,
+	extension=[".small.SAM"]
+)
+
+
+## Snakefile_merge_call_peaks ##
+EXPECTED_MERGED_INDEXED_BAM = expand(BAM_DIR+"{group}{extension}",
+        group=GROUP,
+        extension=[".small.chrsorted.BAM", ".small.chrsorted.BAM.bai"]
+)
+EXPECTED_MERGED_NARROWPEAK = expand(MACS_DIR+"{group}{extension}",
+        group=GROUP,
+        extension=[".filtered.narrowPeak"]
+)
+
+
+## Snakefile_merge_bigwig ##
+EXPECTED_MERGED_BW =  expand(COVERAGE_DIR +"{group}{extension}",
+        group=GROUP,
+        extension=[".no_norm.bw", ".bw"]
+)

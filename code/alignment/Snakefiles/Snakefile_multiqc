@@ -1,0 +1,36 @@
+# QC
+
+rule QC_fragment_size:
+     input:
+        bam=BAM_DIR + "{sample}.FINAL.BAM",
+     message: "QC for peaks - count the distribution of the fragment size"  
+     output:
+       log= BAM_DIR + "{sample}.FINAL.BAM.size.log",
+       size=BAM_DIR + "{sample}.FINAL.BAM.size.pdf"
+     shell:("picard CollectInsertSizeMetrics I={input.bam} MINIMUM_PCT=0.5  O={output.log} H={output.size}  W=1000")
+
+
+rule flagstat:
+     input:
+        bam=BAM_DIR + "{sample}.FINAL.BAM"
+     message:
+        "report number of reads that are aligned with the genome"
+     output:
+         BAM_DIR + "{sample}.flagstat.txt"
+     threads: N
+     shell:("samtools flagstat -@ {N} {input} >{output}")
+
+
+
+rule multiQC:
+	input:
+           expand(BAM_DIR + "{sample}.FINAL.BAM.size.pdf",sample=SAMPLES),
+           expand(BAM_DIR + "{sample}.flagstat.txt", sample=SAMPLES),
+	output:
+            report=MULTIQC_REPORT_FILE
+	message: "multiqc - report flagstat into html report"
+	shell:
+	    ("""set +u;source /home/ec2-user/anaconda3/bin/activate mqc&&
+             multiqc {BAM_DIR} {FASTQC_DIR}   -o {MULTIQC_DIR}  -d -f -v  """)
+
+

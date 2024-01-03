@@ -1,0 +1,38 @@
+# Rule to run IDR
+
+rule run_IDR:
+	input:
+		sampleNP=expand(MACS_DIR+"{samples}.filtered.narrowPeak", samples=SAMPLES),
+		groupNP=expand(MACS_DIR+"{group}.filtered.narrowPeak", group=GROUP)
+	output:
+		CODE_DIR + "expected_IDR_rule_finished"
+	run:
+		for group in GROUP:
+			print("group: {}".format(group))
+			for pair in combinations[group]:
+				print("pair: {}".format(pair))
+				input_files = "{}_peaks.narrowPeak {}_peaks.narrowPeak {}_peaks.narrowPeak".format(pair[0], pair[1], group)
+				print("input_files: {}".format(input_files))
+
+
+				
+				cmd_idr_samples = """idr --samples {MACS_DIR}{pair[0]}_peaks.narrowPeak  {MACS_DIR}{pair[1]}_peaks.narrowPeak  \\
+							--peak-list  {MACS_DIR}{group}_peaks.narrowPeak --input-file-type narrowPeak \\
+							--output-file  {MACS_DIR}{pair[0]}_peaks.narrowPeak_{pair[1]}_peaks.narrowPeak --rank p.value \\
+							--soft-idr-threshold 0.1 --plot --use-best-multisummit-IDR"""
+				print("cmd_idr_samples: {}".format(cmd_idr_samples))
+				shell(cmd_idr_samples)
+
+
+				cmd_set_threshold = """IDR_THRESH_TRANSFORMED=$(awk -v p=0.1 'BEGIN{{print -log(p)/log(10)}}') &&
+
+				awk 'BEGIN{{OFS="\t"}}  $12>='"${{IDR_THRESH_TRANSFORMED}}"' {{print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}}'\\
+				{MACS_DIR}{pair[0]}_peaks.narrowPeak_{pair[1]}_peaks.narrowPeak | sort | uniq | sort -k7n,7n \\
+				| gzip -nc > {MACS_DIR}{group}_{pair[0]}_{pair[1]}_IDR0.1.narrowPeak.gz"""
+				print("cmd_set_threshold: {}".format(cmd_set_threshold))
+				shell(cmd_set_threshold)
+		shell("""touch {output}""")
+
+
+
+

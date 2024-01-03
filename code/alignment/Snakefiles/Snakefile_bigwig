@@ -1,0 +1,44 @@
+# Rule to create bigwig
+
+
+#include:"Snakefile_setup_ATAC"
+#We use bam coverage to get bigWig files that can be used in IGV to show coverage 
+#https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html
+
+
+
+BIGWIG_CMD = "bamCoverage -v -b {{input}}  -o {{output}} --binSize 1 --normalizeUsing {normalizeUsing} --numberOfProcessors {{N}}"
+
+
+rule bigwig_norm_using_None:
+        input:
+                BAM_DIR+"{sample}.small.chrsorted.BAM"
+        output:
+                COVERAGE_DIR +"{sample}.no_norm.bw"
+	threads: N
+	run:
+		cmd=BIGWIG_CMD.format(normalizeUsing="None")
+		print("bigwig_norm_using_None cmd:", cmd)
+        	shell(cmd)
+
+
+rule bigwig_norm_using_CPM:
+       input:
+               BAM_DIR+"{sample}.small.chrsorted.BAM"
+       output:
+               COVERAGE_DIR +"{sample}.bw"
+       threads: N
+       run:
+               cmd = BIGWIG_CMD.format(normalizeUsing="CPM")
+               print("bigwig_norm_using_CPM cmd:", cmd)
+               shell(cmd)
+
+
+
+rule run_all_bigwig:
+	input:
+		EXPECTED_MERGED_BW 
+	message:"run_all_bigwig - rule to allow running create_big_wig as direct target"
+	run:
+		print("running rule run_all_bigwig")
+

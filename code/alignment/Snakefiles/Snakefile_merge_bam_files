@@ -1,0 +1,52 @@
+# Rule to merge all the bam files into groups
+
+
+#include:"Snakefile_setup_ATAC"
+
+EXPECTED_TEMP_GROUP_FILES = expand(CODE_DIR+"temp_group_{group}",
+        group=GROUP
+)
+
+THREADS_PER_GROUP = int(round(MACHINE_THREADS / len(mapping)))
+
+rule setup_group_temp_files:
+	output:
+		temp(EXPECTED_TEMP_GROUP_FILES)
+	run:
+		print(EXPECTED_TEMP_GROUP_FILES)
+		for group in mapping.keys():
+                        output_file = os.path.join(CODE_DIR, "temp_group_" + group)
+			shell('''touch {output_file}''')
+
+rule merge_bam:
+	input:
+		expand(BAM_DIR+"{sample}.FINAL.BAM",sample=SAMPLES),
+		temp_group=os.path.join(CODE_DIR, "temp_group_{my_group}")
+		
+	output:
+		os.path.join(BAM_DIR, "{my_group}.FINAL.BAM")
+	params:
+		group="{my_group}"
+	threads: THREADS_PER_GROUP-1  #NB this is the additional threads to match -@ option in samtools
+		#in theory this could cause snakemake to run more jobs than CPUs but then the linux scheduler can handle the load
+	run:
+		group = params.group
+		group_samples = mapping[group]
+		group_sample_bam = expand(BAM_DIR+"{sample}.FINAL.BAM", sample=group_samples)
+
+		print("group:", group)
+		print("output", output)
+		print("group_samples:", group_samples)
+		print("group_sample_bam:", group_sample_bam)
+		
+		cmd_merge = 'samtools merge -@ {threads}  {output} {group_sample_bam}'
+		shell(cmd_merge)
+
+
+rule run_all_merge_bam_files:
+	input:
+		expand(os.path.join(BAM_DIR,"{group}.FINAL.BAM"), group=GROUP)
+	message:
+		"run_all_merge_bam_files - rule to allow running merge_bam as direct target"
+	run:
+		print("running rule run_all_merge_bam_files")
