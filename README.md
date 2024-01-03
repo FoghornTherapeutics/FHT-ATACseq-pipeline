@@ -32,13 +32,15 @@ Replicates:  N=2
 
 # Data Flow
 
-The overall ATACseq architecture is the one below:
+The overall ATACseq architecture is split between two parts: the alignment and the downstream analysis.
 
 ## Alignment
 
-A simplified version of the alignement is to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
+The alignment includes several steps to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
 
 <img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
+
+You can find a more detailed version of the data flow diagram of the aligmnent [here](). 
 
 
 The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
