@@ -40,7 +40,7 @@ The alignment includes several steps to remove adapters with a cutting enzyme, a
 
 <img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
 
-You can find a more detailed version of the data flow diagram of the aligmnent [here](). 
+You can find a more detailed version of the data flow diagram of the aligmnent [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/code/alignment/REAME.md). 
 
 
 The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
