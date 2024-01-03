@@ -117,6 +117,8 @@ This part of the downstream analysis compares reads at regions that are meaningf
    
 3) Peak distribution:
 
+As a reminder, we divide peaks into three categories: Up (p-value < 0.05 &  logFC > 0.5), Down (p-value < 0.05 &  logFC < - 0.5) and Unchanged (p-value < 0.05 or |logFC| < 0.5).
+
    * ARID1A KO in WT HCT116 cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
    * ARID1B KD in WT HCT116 cells had little effect on chromatin accessibility.
    * In contrast, ARID1B KD in ARID1A-/- HCT116 cells resulted in hundreds of changed sites, primarily at regions where accessibility was lost.
@@ -130,16 +132,25 @@ This part of the downstream analysis compares reads at regions that are meaningf
 
 
      
-4) Genome location: Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
+4) Genome location:
+
+
+Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
 
    ![](images/output_results/Genomic_location.JPG)
 
   
      
 5) Motif analysis: 
+   
+
+For the Motif analysis, we use [HOMER](http://homer.ucsd.edu/homer/motif/). It looks at the peaks in the Target Sequence. for example the peaks loosing chromatin accessibility and compare them to the Total Background Dequences, i.e. the peaks with unchanged chromatin accessibility. It then compares sequences that have known motifs with the reference that are in the Target Sequence.
+
    * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
    * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
 
+
+  
   Motifs losing peak accessibility: 
   
    ![](images/output_results/Motifs_down.JPG)
@@ -165,7 +176,11 @@ Zoom in of certain clusters in the heatmap:
      
 6) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
 
-ADD EXPLANATIONS for this !!!!!!!!!!!!!!!!!!!!!!!!!!!
+   We first order peaks within contrast for WT or DMSO depending on the read counts. Then we concatenate peak accessibility going down/unchancged/up. We keep the same order of the peaks for the treatment. We can observe on the top, peaks losing accessibility and show less intensity with the compound/treatment i.e. there are less reads). The opposite is true on the bottom with more intensity in the compound where peaks gain chromatin accessibility.
+
+   peaks losing their color itensity ant in the bottom gaining 
+
+
 
 
    <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
@@ -176,10 +191,19 @@ ADD EXPLANATIONS for this !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
-6) Footprinting
+7) Footprinting
+
+[Rgt-hint](https://reg-gen.readthedocs.io/en/latest/hint/tutorial-dendritic-cell.html) generates new bed files that consider peak regions for footprinting. It then finds motifs overlapping with predicted footprints and  generates average ATAC-seq profiles around binding sites of particular TFs. 
+
+We can see in this example that when combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap (ordered by desending absolute value of logFC and filtered for only significant logFC) shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
+ <img src="/images/output_results/footprint.JPG" alt="image" style="width:1000px;height:auto;">
+
+Rgt-hint also outputs profile plots. The x-axis id the base pair +/- 100bp either side of the FOSL1:JUNB motif footprint. The y-axis is the coverage of the BAM file reads. It correlates with the open chromatin and assumes to be TF activity. 
+ 
+<img src="/images/output_results/footprint_profile.JPG" alt="image" style="width:500px;height:auto;">
 
 
-+ ADD VOLCANO PLOT, ANCHOR PLOT AND HEATMAP OVERALL
+
 
 
 
