@@ -163,7 +163,7 @@ Zoom in of certain clusters in the heatmap:
 
    + ADD SCATTER PLOT OF MOTIFS
      
-7) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
+6) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
    
    <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
    <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
@@ -173,7 +173,7 @@ Zoom in of certain clusters in the heatmap:
 
 
 
-9) Footprinting
+7) Footprinting
 
 
 + ADD VOLCANO PLOT, ANCHOR PLOT AND HEATMAP OVERALL
