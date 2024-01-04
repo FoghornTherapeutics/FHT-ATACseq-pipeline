@@ -125,14 +125,15 @@ Looking at the first plot, there are two vertical lines on the left side, the hi
 The PCA shows a clear separation between the cell lines with the samples from TOV21G on the upper left and HCT11 cells in the lower right. <br/> 
 
 
-        <img src="/images/output_results/PCA_all_samples.JPG" alt="image" style="width:760px;height:auto;">
+   <img src="/images/output_results/PCA_all_samples.JPG" alt="image" style="width:760px;height:auto;">
         
-Among HCT116 cells only, we see a clear separation of the double treatment (ARID1A knockout and ARID1B knockdown) in blue on the far left. Then, ARID1A knockout samples are clustering together in the middle in purple. There are no clear separation between the HCT116 WT cells and ARID1B knockdown. It could be an indication that ARID1B knockdown does not have a strong effect in chromatin accessibility in WT HCT116 cells. <br/> 
-        <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
+Among HCT116 cells only, we see a clear separation of the double treatment (ARID1A knockout and ARID1B knockdown) in blue on the far left. Then, ARID1A knockout samples are clustering together in the middle in purple. There are no clear separation between the HCT116 WT cells and ARID1B knockdown. It could be an indication that ARID1B knockdown does not have a strong effect in chromatin accessibility in WT HCT116 cells. 
+   
+   <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
 
 There is no clear interpretation for the PCA with TOV21G cells. We also predict a weak effect from ARID1B knockdown in ARID1A-mutant TOV21G cells.
 
-        <img src="/images/output_results/TOV21G_PCA.JPG" alt="image" style="width:700px;height:auto;">
+   <img src="/images/output_results/TOV21G_PCA.JPG" alt="image" style="width:700px;height:auto;">
       
   
    
