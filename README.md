@@ -141,9 +141,9 @@ There is no clear interpretation for the PCA with TOV21G cells. We also predict 
 
   Another QC measure is to compute the pearson correlation between samples of their feature counts.
 
-  The first visualization is to look at the heatmap of the sample-to-sample correlation, clustered by similarities. Each column and row is a sample.
+  The first visualization is to look at the heatmap of the sample-to-sample correlation, clustered by similarities. Each column and row is a sample. A red square indicates a higher correlation as opposed to a blue square.
   
-  . Just like in the PCA plot, samples cluste
+  Just like in the PCA plot, samples cluster first by cell lines with all HCT116 in green and TOV21G in red. Among HCT116 samples, WT and ARID1B knockdown are the most similar, then 
 
 HCT116 shows higher correlation
 say it is consistent w/ PCA
