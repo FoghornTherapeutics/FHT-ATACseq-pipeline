@@ -114,6 +114,7 @@ This part of the downstream analysis compares reads at regions that are meaningf
      
         ![](images/output_results/boxplot_sample_to_sample_corr.JPG)
    
+   Another example with one of the samples being an outlier is described [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/QC_example_with_outlier.md).
    
 3) Peak distribution:
 
