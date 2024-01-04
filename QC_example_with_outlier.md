@@ -9,7 +9,7 @@ However, the sample B4 has its nucleosome free peak counts lower than +1 nucleos
 
 The snapshot from the FRiP scores are also typical for ATACseq results.
 
-<img src="images/output_results/FRIP_outlier.JPG" alt="image" style="width:600px;height:auto;">
+<img src="images/output_results/FRIP_outlier.JPG" alt="image" style="width:400px;height:auto;">
 
 
 
