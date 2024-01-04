@@ -80,7 +80,7 @@ The first part of the analysis starts with some QC measures:
 
    The insert size plot is an histogram of the distribution of the length of DNA betwen the two sequencing reads (paired-end sequencing). The x-axis represents the insert size (length of DNA between the paired reads). This size can vary depending on how the DNA was fragmented and prepared for sequencing. The y-axis shows the frequency or count of read pairs for each insert size. Each line corresponds to a unique sample. <br/> 
    
-Generally, a well-conducted ATAC-seq experiment is expected to produce a plot showing the distribution of fragment sizes with a pattern of decreasing, periodic peaks. These peaks correspond to regions without nucleosomes (NFR), which are typically less than 120 base pairs, and regions with mono-, di-, and tri-nucleosomes, approximately at 200, 400, and 600 base pairs, respectively. Deviations from the expected pattern, like multiple peaks or a very broad distribution, can indicate issues such as DNA fragmentation problems or contamination. In this example, it is the classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+Generally, a well-conducted ATAC-seq experiment is expected to produce a plot showing the distribution of fragment sizes with a pattern of decreasing, periodic peaks. These peaks correspond to regions without nucleosomes, also called Nucleosome Free Regions (NFR), which are typically less than 120 base pairs, and regions with mono-, di-, and tri-nucleosomes, approximately at 200, 400, and 600 base pairs, respectively. Deviations from the expected pattern, like multiple peaks or a very broad distribution, can indicate issues such as DNA fragmentation problems or contamination. In this example, it is the classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
 
    NB: The oscillation of the insert size is due to the DNA helix shape (double stranded) including a major and minor group wrapped around each other. The enzyme has a preference for one of the groups.
 
@@ -106,19 +106,32 @@ The FRiP scores are a quantitative measure of how effectively the DNA fragments 
 
    D) **n Irreproducible Discovery Rate (nIDR)**
    
-   IDR is a statistical framework used in the analysis of genomic data, particularly in high-thrIDR: Replicates of the same group show consistency.
+   IDR is used to measure the consistency of results (such as the identification of transcription factor binding sites, histone marks, or gene expression levels) across different experimental replicates. The standard method involves comparing the rank of results across different replicates to estimate the proportion of findings that are reproducible (consistent across replicates) versus those that are irreproducible (inconsistent or likely to be noise). The nIDR method is technique we have developed from the orignial and detailed [here](). 
+
+One of the nIDR outputs is the Empirical Cumulative Distribution Function (ECDF) plots of the consistency across replicates of all peaks found in a group of replicates. The x-axis is the "min percent rank" which indicates the consistency of a peak across the replicates, a higher value corresponds to a higher consistency of peaks accross replicates. The y-axis is the fraction peaks that have at least that value. The red curve is plotting the actual data and the blue curve is the simulated null distribution. 
+
+Looking at the first plot, there are two vertical lines on the left side, the highest point of the red part (real data) of the vertical line is at y=0.75, x=0.22.  This means that 75% of the real data has a min percent rank (consistency score) of 0.21 or less. At the higher consistency scores around x > 0.6, the red curve of real data is below the blue curve of the null data, indicating that real data has higher consistency scores than the null.  This indicates the replicates have peaks that are consistent. The green dashed line indicates a p-value of 0.1 based on the blue null curve and determines the consistency score threshold to use for keeping the real peaks. In this case, the green dashed line indicates the threshold where 90% of the null peaks have a consistency score below 0.65. Therefore this sets a threshold for choosing peaks with a p value < 0.1. 0.65 is considered to be high, with a null distribution being above the actual one, replicates of the same group show consistency.
+
+
    <img src="/images/output_results/HCT116_nIDR.JPG" alt="image" style="width:700px;height:auto;">
    <img src="/images/output_results/TOV21G_nIDR.JPG" alt="image" style="width:700px;height:auto;">
 
 
    
-   E) PCA plot: clear separation between cell lines with the Principal Component 1 and 2. PC2 clusters HCT116 by treatment.
-   *   WT HCT116 cells and ARID1B KD HCT116 cells cluster together. It could be an indication that ARID1B KD does not have a strong effect in chromatin accessibility in WT HCT116 cells.
-   *   We predict similar results between ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cells that cluster all together.
-     
+   E) **Principal Component Analysis (PCA) plot**
+   
+   PCA, or Principal Component Analysis, is a statistical technique used to simplify the complexity in high-dimensional data while retaining trends and patterns in a two-dimensional space.
+
+The PCA shows a clear separation between the cell lines with the samples from TOV21G on the upper left and HCT11 cells in the lower right. <br/> 
+
 
         <img src="/images/output_results/PCA_all_samples.JPG" alt="image" style="width:760px;height:auto;">
+        
+Among HCT116 cells only, we see a clear separation of the double treatment (ARID1A knockout and ARID1B knockdown) in blue on the far left. Then, ARID1A knockout samples are clustering together in the middle in purple. There are no clear separation between the HCT116 WT cells and ARID1B knockdown. It could be an indication that ARID1B knockdown does not have a strong effect in chromatin accessibility in WT HCT116 cells. <br/> 
         <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
+
+There is no clear interpretation for the PCA with TOV21G cells. We also predict a weak effect from ARID1B knockdown in ARID1A-mutant TOV21G cells.
+
         <img src="/images/output_results/TOV21G_PCA.JPG" alt="image" style="width:700px;height:auto;">
       
   
