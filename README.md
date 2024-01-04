@@ -48,7 +48,7 @@ The alignment includes several steps to remove adapters, align to the genome, re
 You can find a more detailed version of the data flow diagram of the aligmnent [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/code/alignment/README.md). 
 
 
-The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing.  An example of a region likes this is shown below in a genome browser view.  We can see that the overall area of the peak is reduced when comparing DMSO with treatment. 
+As mentioned one goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing.  An example of a region like this is shown below in a genome browser view.  The upper three traces correspond to DMSO (vehicle/untreated) samples, and the lower three traces correspond to samples treated with a compound.  The coverage of reads in the upper three traces is consistently higher than in the lower three, indicating that chromatin accessibility has decreased as a result of this treatment.
 
 
 ![](images/data_flow/IGView.JPG)
