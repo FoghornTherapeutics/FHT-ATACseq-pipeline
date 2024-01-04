@@ -236,33 +236,29 @@ It is possible to zoom in some of the clustered regions in the heatmap to analyz
      
 For each contrast and for each category of peaks, we analyze the scatter plot of the motifs the most significantly changing. The x-axis is the perrcentage in the Target Sequence over the Background Sequence and the y-axis is the siginificance. The further a point is on the upper right corner, the most siginificantly it is changed between the negative control and the treatment. In this case, we highlight again the AP1 family for the contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO).
 
-   + ADD SCATTER PLOT OF MOTIFS
+
+   <img src="/images/output_results/motifs_sc.JPG" alt="image" style="width:550px;height:auto;">
      
 5) Tornado plot 
 
+A tornado plot is a bar chart to visualize all the peaks at once.  Each row is a peak and the intensity of the color represents the read count.
 
-It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
-
-   We first order peaks within contrast for WT or DMSO depending on the read counts. Then we concatenate peak accessibility going down/unchanched/up. We keep the same order of the peaks for the treatment. We can observe on the top, peaks losing accessibility and show less intensity with the compound/treatment i.e. there are less reads). The opposite is true on the bottom with more intensity in the compound where peaks gain chromatin accessibility.
-
-   peaks losing their color itensity ant in the bottom gaining 
-
-
-
+To build it, we first gather the unique set of peaks by contrast. For each category of DPA results, we order the peaks from the most intense color to the least. We concatenate the ordered peak lists together in the down/unchanched/up order. 
+Keeping the exact same order of the list of peaks, we generate the tornado plot for the treated group. The upper part, peaks losing chromatin accessibility show less intensity in with the treatment. The bottom part, peaks gaining chromatin accessibility, show a stronger intensity that the negative control group.
 
    <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
    <img src="/images/output_results/TP_1.JPG" alt="image" style="width:900px;height:auto;">
      
-
-     
-
 
 
 6) Footprinting
 
-[Rgt-hint](https://reg-gen.readthedocs.io/en/latest/hint/tutorial-dendritic-cell.html) generates new bed files that consider peak regions for footprinting. It then finds motifs overlapping with predicted footprints and  generates average ATAC-seq profiles around binding sites of particular TFs. 
 
-We can see in this example that when combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap (ordered by desending absolute value of logFC and filtered for only significant logFC) shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
+Footprinting identifies precise regions of DNA that are strongly bound by proteins, such as transcription factors. It is based on the fact that when a protein binds to DNA, it protects that stretch of DNA from being cut or modified by certain chemicals or enzymes. By identifying these protected regions, we can determine the exact location and sequence of DNA where proteins bind. 
+
+To identfy these regions, we use [Rgt-hint](https://reg-gen.readthedocs.io/en/latest/hint/tutorial-dendritic-cell.html) to generate new bed files that consider peak regions for footprinting. It then finds motifs overlapping with predicted footprints and generates average ATAC-seq profiles around binding sites of particular TFs. 
+
+In this example, when combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap (ordered by desending absolute value of logFC and filtered for only significant logFC) shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
  <img src="/images/output_results/footprint.JPG" alt="image" style="width:1000px;height:auto;">
 
 Rgt-hint also outputs profile plots. The x-axis id the base pair +/- 100bp either side of the FOSL1:JUNB motif footprint. The y-axis is the coverage of the BAM file reads. It correlates with the open chromatin and assumes to be TF activity. 
