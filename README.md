@@ -35,37 +35,34 @@ Overview of experiment:
 * ARID1B knockdown: SRR5876663 & SRR5876664
 
 
-# Data Flow
+# Description of the pipeline
 
-The overall ATACseq architecture is split between two parts: the alignment and the downstream analysis.
+The overall ATACseq architecture is split between two parts: the alignment and the downstream analysis.  Alignment focuses on alignment of reads  the genome and identification of regions of higher read counts - "peaks".  Downstream analysis focuses on comparisons across/between samples.
 
 ## Alignment
 
-The alignment includes several steps to remove adapters, align to the genome, remove duplicates and filter to reads less than 120 bp in length (to retain fragments that only in open regions). We obtain two major output files that are the BAM files (aligned reads) and BED/narrowPeak files (identifying regions of open chromatin, "peaks").
+The alignment includes steps to remove adapters, align to the genome, remove duplicates and filter to reads less than 120 bp in length (to retain fragments that represent open regions). We obtain two major output files that are the BAM files (aligned reads) and BED/narrowPeak files (identifying regions of open chromatin, "peaks").
 
 <img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
 
 You can find a more detailed version of the data flow diagram of the aligmnent [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/code/alignment/README.md). 
 
+## Analysis
 
 As mentioned one goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing.  An example of a region like this is shown below in a genome browser view.  The upper three traces correspond to DMSO (vehicle/untreated) samples, and the lower three traces correspond to samples treated with a compound.  The coverage of reads in the upper three traces is consistently higher than in the lower three, indicating that chromatin accessibility has decreased as a result of this treatment.
 
-
 ![](images/data_flow/IGView.JPG)
 
-
-## Analysis
-
-It is useful to contrast RNA-seq with ATAC-seq to illustrate a challenge of analyzing ATAC-seq data.  In RNA-seq, generally, one uses the predefined exons and then counts the reads that overlap with exons to generate gene expression read counts.  For ATAC-seq there are no pre-defined regions analogous to exons that can be used for generating a count matrix, so an early step of the analysis is to identify these regions.  However, these regions are identified for individual samples, and then need to be reconciled across samples in order to allow subsequent comparisons / aggregate analysis across samples.
+It is useful to contrast RNA-seq with ATAC-seq to illustrate a challenge of analyzing ATAC-seq data.  In RNA-seq, generally, one uses the predefined exons and then counts the reads that overlap with exons to generate gene expression read counts.  For ATAC-seq there are no pre-defined regions analogous to exons that can be used for generating a count matrix, so an early step of the analysis is to identify these regions (aka peaks).  These peaks are identified for individual samples, and then need to be reconciled across samples in order to allow subsequent comparisons / aggregate analysis across samples.
 
 Once we have identified these common regions aka peaks we can generate a count matrix, and then we can look at PCA (Principal Component Analysis) and at sample-to-sample correlations.  One important aspect of these analyses is for quality control to look for individual samples that are clear outliers from the other replicates.
 
 ![](images/data_flow/QC_data_flow.JPG)
 
 
-Before we dive in the second part, we define some terminology. We call each sample a replicate.  We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group.  The comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
+Before we dive in the second part, we define some terminology. We call each sample a replicate, and replicates with the same conditions (treatment, cell lines, time, dose, etc.) are a group.  The comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.  Regions of interest are also called "peaks" for short and are genomic locations where open chromatin has been observed for 1 or more samples.
 
-This part of the downstream analysis compares reads at regions that are meaningful but also in common across samples of the same group, to be compared accross contrasts. Once this new set of peaks is defined, we quantify the number of reads in peaks and compute the differential peak area in each contrast to get a logFC and a pvalue by peaks. The peaks are split by change of chroamtin accssibility: descrease (down), increase (up) or unchanged. The three groups of peaks are used for the standard outputs of the downstream analysis (Genomic locations, motif, tornado plots, footprint).
+For a given contrast we define the peaks as the union of the peaks for the groups within the contrast.  The peaks in the groups are determined using nIDR, see below for details.  Using the peaks for a contrast we calculate the peak area as the number of reads in each peak for each group, and then compute the differential peak area for each contrast to get a logFC and a pvalue for each peak. The peaks are categorized by the observed change of chromatin accssibility: descrease (down), increase (up) or unchanged. The three groups of peaks are then analyzed to determine genomic locations (promoter vs enhancer), presence of motifs, tornado plots, and footprinting.
 
 
 ![](images/data_flow/DownstreamAnalysis.JPG)
