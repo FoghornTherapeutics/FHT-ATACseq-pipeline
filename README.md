@@ -74,7 +74,9 @@ For a given contrast we define the peaks as the union of the peaks for the group
 
 1) QC check:
    
-   A) Insert size: classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+   A) Insert size:
+
+   Typically, a successful ATAC-seq experiment should generate a fragment size distribution plot with decreasing and periodical peaks corresponding to the nucleosome-free regions (NFR) (< 100 bp) and mono-, di-, and tri-nucleosomes (~ 200, 400, 600 bp, respectively). classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
    NB: The oscillation of the insert size is due to the DNA helix shape (double stranded) including a major and minor group wrapped around each other. The enzyme has a preference for one of the groups.
 
    <img src="/images/output_results/picard_insert_size.png" alt="image" style="width:700px;height:auto;">
