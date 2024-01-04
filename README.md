@@ -226,20 +226,15 @@ We focus on the Known Motif Enrichcment output that revel the presence of known 
    ![](images/output_results/Motifs_up.JPG)
 
 
-We also output a heatmap of the  motifs accross all contrasts. The , clustered by motifs:
+We also output a heatmap of the motifs accross all contrasts. The color is the log of the log of the p-value from the motif analysis. Blue squares are for motifs that are in peaks losing chromatin accessibility and red squares are for peaks gaining chromatin accessibility. The size of the square is proportional to its significance. We then cluster the heatmap by similarites and obtain clusters of motifs accross contrasts. The overall results is the following:
 
    <img src="/images/output_results/motif_heatmap.JPG" alt="image" width="20%" height="auto">
      
-
-Zoom in of certain clusters in the heatmap:
-
-describe the axis/ color (blue is loss and red is gain) and intensity is the log(log(pValue of Motifs))
-
+It is possible to zoom in some of the clustered regions in the heatmap to analyze which group of motifs are highlighted.
 
    <img src="/images/output_results/motif_heatmap_zoom.JPG" alt="image" style="width:550px;height:auto;">
      
-
-
+For each contrast and for each category of peaks, we analyze the scatter plot of the motifs the most significantly changing. The x-axis is the perrcentage in the Target Sequence over the Background Sequence and the y-axis is the siginificance. The further a point is on the upper right corner, the most siginificantly it is changed between the negative control and the treatment. In this case, we highlight again the AP1 family for the contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO).
 
    + ADD SCATTER PLOT OF MOTIFS
      
