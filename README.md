@@ -73,28 +73,40 @@ For a given contrast we define the peaks as the union of the peaks for the group
 
 
 1) QC check:
-   
-   A) Insert size:
 
-   Typically, a successful ATAC-seq experiment should generate a fragment size distribution plot with decreasing and periodical peaks corresponding to the nucleosome-free regions (NFR) (< 100 bp) and mono-, di-, and tri-nucleosomes (~ 200, 400, 600 bp, respectively). classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+The first part of the analysis starts with some QC measures:
+
+   A) **Insert size**
+
+   The insert size plot is an histogram of the distribution of the length of DNA betwen the two sequencing reads (paired-end sequencing). The x-axis represents the insert size (length of DNA between the paired reads). This size can vary depending on how the DNA was fragmented and prepared for sequencing. The y-axis shows the frequency or count of read pairs for each insert size. Each line corresponds to a unique sample. <br/> 
+   
+Generally, a well-conducted ATAC-seq experiment is expected to produce a plot showing the distribution of fragment sizes with a pattern of decreasing, periodic peaks. These peaks correspond to regions without nucleosomes (NFR), which are typically less than 120 base pairs, and regions with mono-, di-, and tri-nucleosomes, approximately at 200, 400, and 600 base pairs, respectively. Deviations from the expected pattern, like multiple peaks or a very broad distribution, can indicate issues such as DNA fragmentation problems or contamination. In this example, it is the classical ATAC-seq pattern with nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.
+
    NB: The oscillation of the insert size is due to the DNA helix shape (double stranded) including a major and minor group wrapped around each other. The enzyme has a preference for one of the groups.
 
    <img src="/images/output_results/picard_insert_size.png" alt="image" style="width:700px;height:auto;">
    
 
    
-   B) Duplication statistics: ~40% of the reads uniquely mapped to human genome
+   B) **Duplication statistics** 
+
+   Duplicate reads are identical or nearly identical sequences that appear multiple times in the sequencing data. They can arise due to biological reasons (e.g., highly repetitive regions in the genome) or technical reasons (e.g., PCR amplification during library preparation). They can skew the data analysis and lead to inaccurate representation of gene or variant frequencies. 
+
+   Once removed, we compute the deduplication statistics to provide insights into the number and proportion of duplicate reads found in the sequencing data. Common metrics include the total number of reads, the number of unique reads, the number of duplicate reads, and the percentage of reads that are duplicates. high levels of duplication may indicate over-amplification during PCR or other library preparation issues. Conversely, very low duplication levels might suggest a diverse library or under-sampling. In this example, about 40% of the reads uniquely mapped to human genome which is a typical number for ATAC seq experiments.
       	
    <img src="/images/output_results/picard_deduplication.png" alt="image" style="width:700px;height:auto;">
    
-   C) FRiP scores: about 30% of the total peaks are found within the peaks
+   C) **Fraction of Reads in Peaks (FRiP) scores**
 
+The FRiP scores are a quantitative measure of how effectively the DNA fragments of interest have been enriched and captured in the experiment. For well-characterized transcription factors or histone modifications with strong and specific binding, FRIP scores are often expected to be higher. A score in the range of 1% to 10% is commonly seen as acceptable, with some experiments even reaching 20% or higher. In this case, the FRiP scores are around 3%, i.e. 3% of the total peaks are found within the peaks. It is low compared to some other results we could see in the past but still acceptable.
 
    <img src="/images/output_results/FRiP_Table.JPG" alt="image" style="width:550px;height:auto;">
 
 
 
-   D) nIDR: Replicates of the same group show consistency.
+   D) **n Irreproducible Discovery Rate (nIDR)**
+   
+   IDR is a statistical framework used in the analysis of genomic data, particularly in high-thrIDR: Replicates of the same group show consistency.
    <img src="/images/output_results/HCT116_nIDR.JPG" alt="image" style="width:700px;height:auto;">
    <img src="/images/output_results/TOV21G_nIDR.JPG" alt="image" style="width:700px;height:auto;">
 
