@@ -1,21 +1,26 @@
+# Background
+
+DNA replication and gene transcription occur when the higher-order structure of DNA - heterochromatin - is unpacked creating regions of open chromatin. Identifying these open regions is crucial because they often hold the keys to how genes are controlled and aid understanding the genome's regulatory landscape.
+
+Assay for Transposase-Accessible Chromatin using sequencing (ATAC-seq) is a powerful technique that has revolutionized our understanding of the genome's regulatory landscape. It uses sequencing adapters and a cutting enzyme to fragment and tag DNA in the open chromatin regions, after purification, the library can be prepared (including PCR amplification) and sequenced using next-generation sequencing techniques.
+
 # Overview
 
-Chromatin DNA replication and gene transcription occur when the higher-order structure of DNA becomes loose, which is what we call open chromatin. Identifying these open regions is crucial because they often hold the keys to how genes are controlled and understande the genome's regulatory landscape.
-
-Assay for Transposase-Accessible Chromatin using sequencing (ATACseq) is a powerful technique that has revolutionized our understanding of the genome's regulatory landscape. It uses sequencing adapters, like cutting enzyme, to fragment the open chromatin and, after purification, the library can be amplified by PCR. Then it can be analyzed by NGS to obtain fastqs.
+Here we present a computational pipeline and related techniques for analyzing ATAC-seq data.  The ultimate goal of this pipeline is identify genomic regions whose chromatin accessibility changes when a biological system is perturbed (using a compound or a genetic alteration i.e. CRISPR).  Here we will walk through an example of the outputs of this pipeline using publicly available data to illustrate the main outputs and how we use them.
 
 
 # Data
 
-The standard pipeline is ran on publicly available data from paper "[Chromatin accessibility underlies synthetic lethality of SWI/SNF subunits in ARID1A-mutant cancers](https://elifesciences.org/articles/30506#content)" looking for potential PD markers as well as what an ATAC-seq profile looks like. This paper has ATACseq results of ARID1A-/- cancers with ARID1B KD. 
+The standard pipeline was run on publicly available data from paper "[Chromatin accessibility underlies synthetic lethality of SWI/SNF subunits in ARID1A-mutant cancers](https://elifesciences.org/articles/30506#content)" looking for potential PD markers as well as what an ATAC-seq profile looks like. This paper has ATACseq results of ARID1A-/- cancer cell lines (native or CRISPR knockout) with ARID1B knockdown. 
 
-**Data from GEO series**:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975) <br/>
-Biological context (N=2):  TOV21G, HCT116 <br/>
-wild type and modified with stable ARID1A KO <br/>
-Perturbagens (N=1):  shRNA KD of ARID1B <br/>
-Doses (N/A):  just the shRNA no relevant dose <br/>
-Negative control (N=1):  wild type / untreated <br/>
-Replicates:  N=2
+**Data from GEO series**:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975)
+
+Overview of experiment:
+* Biological context (N=2):  TOV21G, HCT116
+* wild type and modified with stable ARID1A knockout
+* Perturbagens (N=1):  shRNA knockdown of ARID1B
+* Negative control (N=1):  wild type / untreated
+* Replicates:  N=2
 
 
 
