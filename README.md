@@ -41,14 +41,14 @@ The overall ATACseq architecture is split between two parts: the alignment and t
 
 ## Alignment
 
-The alignment includes several steps to remove adapters with a cutting enzyme, align to the genome, remove duplicates and filter reads, less than 120 to retain fragments that are not wrapped around nucleosomes, only keep reads in open chromatin. We obtain two major output files that are the BAM files (read counts) and narrowPeak (denser regions).
+The alignment includes several steps to remove adapters, align to the genome, remove duplicates and filter to reads less than 120 bp in length (to retain fragments that only in open regions). We obtain two major output files that are the BAM files (aligned reads) and BED/narrowPeak files (identifying regions of open chromatin, "peaks").
 
 <img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
 
 You can find a more detailed version of the data flow diagram of the aligmnent [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/code/alignment/README.md). 
 
 
-The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing, just like in the one below. We cansee that the overall number of peaks is reduced when comparing DMSO with "treatment". 
+The goal of the ATACseq pipeline is to identifiy regions where the chromatin accessibility is changing.  An example of a region likes this is shown below in a genome browser view.  We can see that the overall area of the peak is reduced when comparing DMSO with treatment. 
 
 
 ![](images/data_flow/IGView.JPG)
