@@ -127,7 +127,7 @@ The PCA shows a clear separation between the cell lines with the samples from TO
 
    <img src="/images/output_results/PCA_all_samples.JPG" alt="image" style="width:760px;height:auto;">
         
-Among HCT116 cells only, we see a clear separation of the double treatment (ARID1A knockout and ARID1B knockdown) in blue on the far left. Then, ARID1A knockout samples are clustering together in the middle in purple. There are no clear separation between the HCT116 WT cells and ARID1B knockdown. It could be an indication that ARID1B knockdown does not have a strong effect in chromatin accessibility in WT HCT116 cells. 
+Among HCT116 cells only, we see a clear separation of the double treatment (ARID1A knockout and ARID1B knockdown) with the blue points being in the far left. ARID1A knockout samples are also clustering together in the middle in purple points. There are no clear separation between the HCT116 WT cells and ARID1B knockdown. It could be an indication that the double treatment has the strongest effect on WT cells, then ARID1A knockout alone has less strong effect and ARID1B knockdown does not have a strong effect in chromatin accessibility in WT HCT116 cells. 
    
    <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
 
@@ -137,7 +137,18 @@ There is no clear interpretation for the PCA with TOV21G cells. We also predict 
       
   
    
-   F) Sample to sample correlation:
+   F) **Sample to sample correlation**
+
+  Another QC measure is to compute the pearson correlation between samples of their feature counts.
+
+  The first visualization is to look at the heatmap of the sample-to-sample correlation, clustered by similarities. Each column and row is a sample.
+  
+  . Just like in the PCA plot, samples cluste
+
+HCT116 shows higher correlation
+say it is consistent w/ PCA
+explain box plot of sample-sample correlation - these are the same correlation values from the heatmap but plotted for each sample against the other samples of the same cell line   
+   
    * HCT116 shows more overlap between samples than TOV21G.
    * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results.
 
