@@ -1,5 +1,15 @@
 # Example: QC test with outlier
 
+Overview of experiment:
+
+* Biological context (N=2): Cell line 1, Cell line 2
+* Perturbagens (N=1): treatment
+* Time point (N=2): 24h and 72h
+* Negative control (N=1): wild type / untreated
+* Replicates: N=3
+
+
+
 In this example, we compare some samples from random data with 2 cell lines, treated at 24h and at 72h.
 
 The first outputs from the package multiqc gives the insert size and the deduplication stats. Overall, it has the classical ATAC-seq pattern (nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.)
