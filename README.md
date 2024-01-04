@@ -120,14 +120,18 @@ For a given contrast we define the peaks as the union of the peaks for the group
         ![](images/output_results/boxplot_sample_to_sample_corr.JPG)
    
    Another example with one of the samples being an outlier is described [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/QC_example_with_outlier.md).
+
+
+
+   DEfine the contrasts!!!
    
 3) Peak distribution:
 
 As a reminder, we divide peaks into three categories: Up (p-value < 0.05 &  logFC > 0.5), Down (p-value < 0.05 &  logFC < - 0.5) and Unchanged (p-value < 0.05 or |logFC| < 0.5).
 
    * ARID1A KO in WT HCT116 cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
-   * ARID1B KD in WT HCT116 cells had little effect on chromatin accessibility.
-   * In contrast, ARID1B KD in ARID1A-/- HCT116 cells resulted in hundreds of changed sites, primarily at regions where accessibility was lost.
+   * In contrast, ARID1B KD in WT HCT116 cells had modest effect on chromatin accessibility.
+   * When combining ARID1B KD and ARID1A-/-, HCT116 cells resulted in thousands of additional sites that lost accessibility.
    * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B KD) showed little effect of chromatin accessibility.
    ![](images/output_results/peak_dist_boxplot.JPG)
 
