@@ -176,6 +176,8 @@ Heatmap of motifs accross all contrasts, clustered by motifs:
 
 Zoom in of certain clusters in the heatmap:
 
+describe the axis/ color (blue is loss and red is gain) and intensity is the log(log(pValue of Motifs))
+
 
    <img src="/images/output_results/motif_heatmap_zoom.JPG" alt="image" style="width:550px;height:auto;">
      
@@ -186,7 +188,7 @@ Zoom in of certain clusters in the heatmap:
      
 6) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
 
-   We first order peaks within contrast for WT or DMSO depending on the read counts. Then we concatenate peak accessibility going down/unchancged/up. We keep the same order of the peaks for the treatment. We can observe on the top, peaks losing accessibility and show less intensity with the compound/treatment i.e. there are less reads). The opposite is true on the bottom with more intensity in the compound where peaks gain chromatin accessibility.
+   We first order peaks within contrast for WT or DMSO depending on the read counts. Then we concatenate peak accessibility going down/unchanched/up. We keep the same order of the peaks for the treatment. We can observe on the top, peaks losing accessibility and show less intensity with the compound/treatment i.e. there are less reads). The opposite is true on the bottom with more intensity in the compound where peaks gain chromatin accessibility.
 
    peaks losing their color itensity ant in the bottom gaining 
 
