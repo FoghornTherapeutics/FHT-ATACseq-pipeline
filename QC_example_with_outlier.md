@@ -2,7 +2,7 @@
 
 In this example, we compare some samples from random data with 2 cell lines, treated at 24h and at 72h.
 
-The first outputs from the package multiqc gives the insert size, the deduplication statistitics. Overall, it has the classical ATAC-seq pattern (nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.)
+The first outputs from the package multiqc gives the insert size and the deduplication stats. Overall, it has the classical ATAC-seq pattern (nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.)
 However, the sample B4 has its nucleosome free peak counts lower than +1 nucleosome counts. 
 
 <img src="images/output_results/multiqc_outlier.JPG" alt="image" style="width:600px;height:auto;">
