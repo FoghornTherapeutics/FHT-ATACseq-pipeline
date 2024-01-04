@@ -56,13 +56,14 @@ As mentioned one goal of the ATACseq pipeline is to identifiy regions where the 
 
 ## Analysis
 
+It is useful to contrast RNA-seq with ATAC-seq to illustrate a challenge of analyzing ATAC-seq data.  In RNA-seq, generally, one uses the predefined exons and then counts the reads that overlap with exons to generate gene expression read counts.  For ATAC-seq there are no pre-defined regions analogous to exons that can be used for generating a count matrix, so an early step of the analysis is to identify these regions.  However, these regions are identified for individual samples, and then need to be reconciled across samples in order to allow subsequent comparisons / aggregate analysis across samples.
 
-The first part of the downstream analysis is to look at QC measures. We look at the overall samples in the experiment to check for any outliers. The challenge of ATAC is that we cannot compare, like RNA, gene expression across exons, but we need to find a set of peaks that is common to all samples. Basically, we look for common location to look at across the genome. With that new set of peaks, we look at PCA (Principal Component Analysis) and at sample-to-sample correlations.
+Once we have identified these common regions aka peaks we can generate a count matrix, and then we can look at PCA (Principal Component Analysis) and at sample-to-sample correlations.  One important aspect of these analyses is for quality control to look for individual samples that are clear outliers from the other replicates.
 
 ![](images/data_flow/QC_data_flow.JPG)
 
 
-Before we dive in the second part, we define some terminology. We call each sample a replicate. We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group. And the comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
+Before we dive in the second part, we define some terminology. We call each sample a replicate.  We define all replicates with the same conditions (treatment, cell lines, time, dose, etc.) as a group.  The comparison of two groups (i.e., test vs. negative control; treated vs. untreated etc.) is called a contrast.
 
 This part of the downstream analysis compares reads at regions that are meaningful but also in common across samples of the same group, to be compared accross contrasts. Once this new set of peaks is defined, we quantify the number of reads in peaks and compute the differential peak area in each contrast to get a logFC and a pvalue by peaks. The peaks are split by change of chroamtin accssibility: descrease (down), increase (up) or unchanged. The three groups of peaks are used for the standard outputs of the downstream analysis (Genomic locations, motif, tornado plots, footprint).
 
