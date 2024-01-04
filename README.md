@@ -72,7 +72,7 @@ For a given contrast we define the peaks as the union of the peaks for the group
 # Results
 
 
-1) QC check:
+1) QC check
 
 The first part of the analysis starts with some QC measures:
 
@@ -141,57 +141,76 @@ There is no clear interpretation for the PCA with TOV21G cells. We also predict 
 
   Another QC measure is to compute the pearson correlation between samples of their feature counts.
 
-  The first visualization is to look at the heatmap of the sample-to-sample correlation, clustered by similarities. Each column and row is a sample. A red square indicates a higher correlation as opposed to a blue square.
-  
-  Just like in the PCA plot, samples cluster first by cell lines with all HCT116 in green and TOV21G in red. Among HCT116 samples, WT and ARID1B knockdown are the most similar, then 
+  The first visualization is to look at the heatmap of the sample-to-sample correlation, clustered by similarities. Each column and row represents a sample. A red square indicates a higher correlation as opposed to a blue square. <br/>   
+  Just like in the PCA plot, samples cluster first by cell lines with all HCT116 in green and TOV21G in red. Among HCT116 samples, WT and ARID1B knockdown are the most similar, then ARID1A knockout samples are clustering together with the most and the most different is with the double treatment. TOV21G do not cluster by treatment which is coherent with the PCA.
 
-HCT116 shows higher correlation
-say it is consistent w/ PCA
-explain box plot of sample-sample correlation - these are the same correlation values from the heatmap but plotted for each sample against the other samples of the same cell line   
-   
-   * HCT116 shows more overlap between samples than TOV21G.
-   * Again, WT HCT116 cells and ARID1B KD HCT116 cells cluster together and ARID1A-mutant TOV21G cells and ARID1B KD TOV21G cluster together which predicts that these two contrasts will present weak results.
+   <img src="/images/output_results/Heatmap_sample_to_sample_corr.JPG" alt="image" style="width:450px;height:auto;">
 
-     <img src="/images/output_results/Heatmap_sample_to_sample_corr.JPG" alt="image" style="width:550px;height:auto;">
+
+The box plot of sample-sample correlation are the same correlation values from the heatmap but plotted for each sample against the other samples of the same cell line. Overall, the correlation values are high enough but we can see that TOV21G have lower correlations between each other. 
+
+
+   <img src="/images/output_results/boxplot_sample_to_sample_corr.JPG" alt="image" style="width:750px;height:auto;">
      
-        ![](images/output_results/boxplot_sample_to_sample_corr.JPG)
+
    
-   Another example with one of the samples being an outlier is described [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/QC_example_with_outlier.md).
 
-
-
-   DEfine the contrasts!!!
    
-3) Peak distribution:
+   We also provided another example of data that highlight an outlier through the analysis. It is detaile [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/QC_example_with_outlier.md).
 
-As a reminder, we divide peaks into three categories: Up (p-value < 0.05 &  logFC > 0.5), Down (p-value < 0.05 &  logFC < - 0.5) and Unchanged (p-value < 0.05 or |logFC| < 0.5).
 
-   * ARID1A KO in WT HCT116 cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
-   * In contrast, ARID1B KD in WT HCT116 cells had modest effect on chromatin accessibility.
-   * When combining ARID1B KD and ARID1A-/-, HCT116 cells resulted in thousands of additional sites that lost accessibility.
-   * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B KD) showed little effect of chromatin accessibility.
+
+The next part is to compare groups of samples accross tretment. In this analysis, we compare the following:
+* Contrast 1: WT HCT116 and ARID1B KD
+* Contrast 2: WT HCT116 and ARID1A KO
+* Contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO)
+* Contrast 4: ARID1B KD and (ARID1B KD + ARID1A KO) 
+* Contrast 5: ARID1A KO and (ARID1B KD + ARID1A KO) 
+* Contrast 6: WT TOV21G and ARID1B KD
+
+Contrast 1 and 4 are similar and Contrast 2 and 5 are also similar.
+   
+2) Differential Peak Area (DPA)
+
+The peak area is the quantification of the signal within significant enriched regions of sequencing reads also called peaks.
+
+Differential peak area analysis comapres the intensity of sequencing read enrichment (peaks) across different genomic regions between conditions. In our case, we could comapre WT HCT116 and ARID1B KD. This analysis helps identify significant changes in DNA-protein interactions or chromatin accessibility, which are crucial for understanding gene regulation and disease mechanisms. 
+
+Once we obtain a logFC and a p-value from the statistical comparison, we divide peaks into three catehories:
+* Down - peaks losing chromatin accessibility: p-value < 0.05 &  logFC < - 0.5.
+* Up - peaks gaining chromatin accessibility: p-value < 0.05 &  logFC > 0.5.
+* Unchanged - others: p-value > 0.05 or  |logFC| < 0.5.
+
+The following boxplot gives an overview of the results for each contrast showing the number of peaks losing or gainig accessiblity. Just like we predicted from the QC check with the PCA and sample-to-sample correlation, HCT116 have a strong effect with the double treatment, then a less strong effect with ARID1A knockout and a much modest effect with ARID1B knockdown. 
+
+   * ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
+   * In contrast, ARID1B knockdown in WT HCT116 cells had modest effect on chromatin accessibility.
+   * When combining ARID1B knockdown and ARID1A knockout, HCT116 cells resulted in thousands of additional sites that lost accessibility.
+   * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B knockdown) showed little effect of chromatin accessibility.
+     
    ![](images/output_results/peak_dist_boxplot.JPG)
 
-   * The upset plot shows overlap between ARID1A KO and ARID1B KD in ARID1A-/- HCT116 cells:
+  Another way to compare the DPA among contrasts is to look at upset plots. An UpSet plot is a visualization tool used for analyzing and displaying intersections across multiple sets. It combines vertical bars showing the size of each set with a matrix and horizontal bars to depict intersections. The upset plot shows overlap between ARID1A knockout and ARID1B knockdown in ARID1A-mutant HCT116 cells:
      
    ![](images/output_results/Upset_plot_down.JPG)
    ![](images/output_results/Upset_plot_up.JPG)
 
 
      
-4) Genome location:
+3) Genomic location:
 
 
-Majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters.
+The genomic location refers to a specific position or region within a genome, the complete set of DNA in an organism. In this case, majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters. 
 
    ![](images/output_results/Genomic_location.JPG)
 
   
      
-5) Motif analysis: 
+4) Motif analysis: 
    
+The motif analysis is a key aspect of genomics and molecular biology, helping to decode the functional elements of genetic sequences and their role in regulating biological processes. We use [Hypergeometric Optimization of Motif EnRichment (HOMER)](http://homer.ucsd.edu/homer/motif/), a widely used software suite for motif analysis in biological sequences, particularly focused on the analysis of regulatory DNA and RNA sequences. 
 
-For the Motif analysis, we use [HOMER](http://homer.ucsd.edu/homer/motif/). It looks at the peaks in the Target Sequence. for example the peaks loosing chromatin accessibility and compare them to the Total Background Dequences, i.e. the peaks with unchanged chromatin accessibility. It then compares sequences that have known motifs with the reference that are in the Target Sequence.
+We focus on the Known Motif Enrichcment output that revel the presence of known motifs from its comprehensive motif database, allowing for the identification of potential regulatory elements. It analyzes the peaks in the Target Sequence (peaks losing chromatin accessibility for example). It then compares them to the Total Background Sequences, i.e. the peaks with unchanged chromatin accessibility. It then compares sequences that have known motifs with the reference that are in the Target Sequence and reports which motifs are the most changing. As part of our pipeline, we output two tables with the 10 most significant motifs that are changing for each contrast.
 
    * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
    * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
@@ -206,7 +225,8 @@ For the Motif analysis, we use [HOMER](http://homer.ucsd.edu/homer/motif/). It l
   
    ![](images/output_results/Motifs_up.JPG)
 
-Heatmap of motifs accross all contrasts, clustered by motifs:
+
+We also output a heatmap of the  motifs accross all contrasts. The , clustered by motifs:
 
    <img src="/images/output_results/motif_heatmap.JPG" alt="image" width="20%" height="auto">
      
@@ -223,7 +243,10 @@ describe the axis/ color (blue is loss and red is gain) and intensity is the log
 
    + ADD SCATTER PLOT OF MOTIFS
      
-6) Tornado plot: It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
+5) Tornado plot 
+
+
+It is an overall look at the whole data at once looking at a very condensed view, where each row is a peak and the intensity of the color represents the read count.
 
    We first order peaks within contrast for WT or DMSO depending on the read counts. Then we concatenate peak accessibility going down/unchanched/up. We keep the same order of the peaks for the treatment. We can observe on the top, peaks losing accessibility and show less intensity with the compound/treatment i.e. there are less reads). The opposite is true on the bottom with more intensity in the compound where peaks gain chromatin accessibility.
 
@@ -240,7 +263,7 @@ describe the axis/ color (blue is loss and red is gain) and intensity is the log
 
 
 
-7) Footprinting
+6) Footprinting
 
 [Rgt-hint](https://reg-gen.readthedocs.io/en/latest/hint/tutorial-dendritic-cell.html) generates new bed files that consider peak regions for footprinting. It then finds motifs overlapping with predicted footprints and  generates average ATAC-seq profiles around binding sites of particular TFs. 
 
