@@ -12,18 +12,18 @@ Overview of experiment:
 
 In this example, we compare some samples from random data with 2 cell lines, treated at 24h and at 72h.
 
-The first outputs from the package multiqc gives the insert size and the deduplication stats. Overall, it has the classical ATAC-seq pattern (nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.)
+The first outputs from the package multiqc gives the insert size and the deduplication stats. Overall, it has the classical ATAC-seq pattern (nucleosome free peak, dinucleosome peak, trinucleosome peak, etc.). 
 However, the sample B4 has its nucleosome free peak counts lower than +1 nucleosome counts. 
 
 <img src="images/output_results/multiqc_outlier.JPG" alt="image" style="width:600px;height:auto;">
 
-The snapshot from the FRiP scores shows typical for an ATACseq experiment.
+The snapshot from the FRiP scores shows typical results with about 20% of reads in peaks.
 
 <img src="images/output_results/FRIP_outlier.JPG" alt="image" style="width:400px;height:auto;">
 
 
 
-The next step is the Principal Component Analysis (PCA) which is a dimensionality reduction. PC1 clusters by cell line with the cell line 1 in the left and cell line 2 on the right. PC2 clusters by treatment for the cell line 1 and by time for the cell line 2. Again, B4 is outside of its cluster (treated cell line 2 at 24h). 
+The Principal Component Analysis (PCA) plot shows that PC1 clusters by cell line with the cell line 1 in the left and cell line 2 on the right. PC2 clusters by treatment for the cell line 1 and by time for the cell line 2. Again, B4 is outside of its cluster (treated cell line 2 at 24h). 
 
 <img src="images/output_results/PCA_outlier.JPG" alt="image" style="width:600px;height:auto;">
 
