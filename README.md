@@ -176,7 +176,7 @@ For this section we are going to look these contrasts:
 
 The following boxplot gives an overview of the results for each contrast showing the number of peaks losing or gainig accessiblity. Just like we predicted from the QC check with the PCA and sample-to-sample correlation, HCT116 have a strong effect with the double treatment, then a less strong effect with ARID1A knockout and a much modest effect with ARID1B knockdown. 
 
-ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites. In contrast, ARID1B knockdown in WT HCT116 cells had modest effect on chromatin accessibility. When combining ARID1B knockdown and ARID1A knockout, HCT116 cells resulted in thousands of additional sites that lost accessibility. ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B knockdown) showed little effect of chromatin accessibility.
+ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites. In contrast, ARID1B knockdown in WT HCT116 cells had modest effect on chromatin accessibility. When combining ARID1B knockdown and ARID1A knockout, HCT116 cells resulted in thousands of additional sites that lost accessibility. ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B knockdown) showed modest effect of chromatin accessibility.
      
    ![](images/output_results/peak_dist_boxplot.JPG)
 
