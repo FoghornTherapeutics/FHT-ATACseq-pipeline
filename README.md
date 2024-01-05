@@ -1,4 +1,4 @@
-# Background
+![image](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/assets/66802971/33c5ddc4-1a99-44f1-9cc9-43abc8fb7f90)# Background
 
 DNA replication and gene transcription occur when the higher-order structure of DNA - heterochromatin - is unpacked creating regions of open chromatin. Identifying these open regions is crucial because they often hold the keys to how genes are controlled and aid understanding the genome's regulatory landscape.
 
@@ -183,10 +183,7 @@ Once we obtain a logFC and a p-value from the statistical comparison, we divide 
 
 The following boxplot gives an overview of the results for each contrast showing the number of peaks losing or gainig accessiblity. Just like we predicted from the QC check with the PCA and sample-to-sample correlation, HCT116 have a strong effect with the double treatment, then a less strong effect with ARID1A knockout and a much modest effect with ARID1B knockdown. 
 
-   * ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites.
-   * In contrast, ARID1B knockdown in WT HCT116 cells had modest effect on chromatin accessibility.
-   * When combining ARID1B knockdown and ARID1A knockout, HCT116 cells resulted in thousands of additional sites that lost accessibility.
-   * ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B knockdown) showed little effect of chromatin accessibility.
+ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin accessibility resulting in thousands of increased and decreased sites. In contrast, ARID1B knockdown in WT HCT116 cells had modest effect on chromatin accessibility. When combining ARID1B knockdown and ARID1A knockout, HCT116 cells resulted in thousands of additional sites that lost accessibility. ARID1A-mutant TOV21G cell line infected with shRNAs to ARID1B (ARID1B knockdown) showed little effect of chromatin accessibility.
      
    ![](images/output_results/peak_dist_boxplot.JPG)
 
@@ -212,8 +209,7 @@ The motif analysis is a key aspect of genomics and molecular biology, helping to
 
 We focus on the Known Motif Enrichcment output that revel the presence of known motifs from its comprehensive motif database, allowing for the identification of potential regulatory elements. It analyzes the peaks in the Target Sequence (peaks losing chromatin accessibility for example). It then compares them to the Total Background Sequences, i.e. the peaks with unchanged chromatin accessibility. It then compares sequences that have known motifs with the reference that are in the Target Sequence and reports which motifs are the most changing. As part of our pipeline, we output two tables with the 10 most significant motifs that are changing for each contrast.
 
-   * Sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks.
-   * However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
+We can see that sites losing chromatin accessibility are strongly enriched in the AP-1 family in ARID1A-/- HCT116 cells and relatively highly enriched in ARID1A-mutant TOV21G cell lines over the total number of peaks. However, motifs in ARID1B KD in WT HCT116 cells have low p-values and are mostly in the TEAD family.
 
 
   
@@ -260,29 +256,14 @@ To identfy these regions, we use [Rgt-hint](https://reg-gen.readthedocs.io/en/la
 
 To highlight significantly upregulated or downregulated TF motifs, we generate volcano plots. The y-axis is the negative logarithm of the p-value (statistical significance) against the log fold change (magnitude of change) on the x-axis. The plot resembles a volcanic eruption due to its shape. Some points are not significantly different form the "body" of the volcano, while some points are significantly different (both large magnitude of change and high statistical significance) shoot out to the sides and top, forming the "eruption".
 
-The heatmpa is another way to visualize difference a
 
+The heatmap is another way to visualize the difference between the two groups (negative control and treatment) in each contrast. It is ordered by absolute value of logFC and filtered only for significantly different motifs. Each column is a sample with the first two being for treatment and last two for the negative control. The color scale is a gradient showing variations in footprinting scores.
 
-tool used to represent the magnitude of values in a matrix or table as colors. It's commonly used in various fields, including bioinformatics, statistics, and machine learning, to visually represent complex data sets. Here's a basic overview of heatmaps:
+In this example, we compare the contrasts 1, 2 and 3. When combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
 
-Components of a Heatmap:
-
-Matrix Format: Data is arranged in a grid, where rows and columns represent different variables or categories.
-Color Coding: Each cell in the grid is colored based on the value it represents. The color scale is typically a gradient showing variations in data value, with different colors representing different ranges of values.
-Interpretation:
-
-Visual Representation: The color intensity in each cell corresponds to the magnitude of the value. Darker or more intense colors usually indicate higher values, and lighter colors indicate lower values.
-Pattern Recognition: Heatmaps make it easier to identify patterns, correlations, or clusters in large data sets.
-
-
-
-
-
-
-In this example, when combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap (ordered by desending absolute value of logFC and filtered for only significant logFC) shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
  <img src="/images/output_results/footprint.JPG" alt="image" style="width:1000px;height:auto;">
 
-Rgt-hint also outputs profile plots. The x-axis id the base pair +/- 100bp either side of the FOSL1:JUNB motif footprint. The y-axis is the coverage of the BAM file reads. It correlates with the open chromatin and assumes to be TF activity. 
+Rgt-hint also outputs profile plots. The x-axis id the base pair +/- 100bp either side of the FOSL1:JUNB motif footprint. The y-axis is the coverage of the BAM file reads. It correlates with the open chromatin and assumes to be TF activity. For example, FOS:JUNB is one of most changing motifs in the contrast 3. 
  
 <img src="/images/output_results/footprint_profile.JPG" alt="image" style="width:500px;height:auto;">
 
