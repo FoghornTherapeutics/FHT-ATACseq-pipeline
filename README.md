@@ -4,6 +4,8 @@ DNA replication and gene transcription occur when the higher-order structure of 
 
 Assay for Transposase-Accessible Chromatin using sequencing (ATAC-seq) is a powerful technique that has revolutionized our understanding of the genome's regulatory landscape. It uses sequencing adapters and a cutting enzyme to fragment and tag DNA in the open chromatin regions, after purification, the library can be prepared (including PCR amplification) and sequenced using next-generation sequencing techniques.
 
+The paper [ATAC-seq: A Method for Assaying Chromatin Accessibility Genome-Wide](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4374986/pdf/nihms653929.pdf) by Jason Buenrostro et al. describes the ATAC-seq method for mapping chromatin accessibility across the genome. This technique uses a hyperactive Tn5 transposase to insert sequencing adapters into accessible chromatin regions. The sequencing reads from these regions are then used to infer areas of increased accessibility, map transcription-factor binding, and identify nucleosome positions. This method offers a fast and sensitive alternative to DNase-seq for assaying chromatin accessibility or to MNase-seq for assessing nucleosome positions in accessible regions of the genome​.
+
 # Overview
 
 Here we present a computational pipeline and related techniques for analyzing ATAC-seq data.  The ultimate goal of this pipeline is identify genomic regions whose chromatin accessibility changes when a biological system is perturbed (using a compound or a genetic alteration i.e. CRISPR).  Here we will walk through an example of the outputs of this pipeline using publicly available data to illustrate the main outputs and how we use them.
