@@ -131,7 +131,7 @@ Among HCT116 cells only, we see a clear separation of the double treatment (ARID
    
    <img src="/images/output_results/HCT116_PCA.JPG" alt="image" style="width:760px;height:auto;">
 
-There is no clear interpretation for the PCA with TOV21G cells. We also predict a weak effect from ARID1B knockdown in ARID1A-mutant TOV21G cells.
+There is no clear interpretation for the PCA with TOV21G cells. Based on this PCA result, we predict a weak effect from ARID1B knockdown in ARID1A-mutant TOV21G cells.
 
    <img src="/images/output_results/TOV21G_PCA.JPG" alt="image" style="width:700px;height:auto;">
       
