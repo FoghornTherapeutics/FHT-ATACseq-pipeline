@@ -1,4 +1,4 @@
-![image](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/assets/66802971/33c5ddc4-1a99-44f1-9cc9-43abc8fb7f90)# Background
+# Background
 
 DNA replication and gene transcription occur when the higher-order structure of DNA - heterochromatin - is unpacked creating regions of open chromatin. Identifying these open regions is crucial because they often hold the keys to how genes are controlled and aid understanding the genome's regulatory landscape.
 
