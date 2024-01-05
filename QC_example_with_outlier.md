@@ -27,12 +27,17 @@ The Principal Component Analysis (PCA) plot shows that PC1 clusters by cell line
 
 <img src="images/output_results/PCA_outlier.JPG" alt="image" style="width:600px;height:auto;">
 
-Another QC measure sanity check is with heatmap gives us an overall visual of the sample-to-sample correlations. The samples are clustered depending on their correlations. We can observe a strong separation between cell lines (bio_context_id is split between green and red). For the cell line 1 (green), we can see that samples cluster by treatment (pert_id split between green and red). And then samples are split by time. It is coherent with the results from the PCA. The cell line 2 (red) clusters first by time and then by treatment in accordance with the results from the PCA. One more time, the sample B4 is not with the other samples from the treated cell line 2 at 24h abd by consequence shos less agreement with the other replicates.
+The heatmap gives an overall visual of the sample-to-sample correlations. They are all-together clustered depending on their correlations. <br/>
+There is a strong separation between cell lines (bio_context_id is split between green and red). <br/>
+For the cell line 1 (green), we can see that samples cluster by treatment (pert_id split between green and red). And then samples are split by time. It is coherent with the results from the PCA. <br/>
+The cell line 2 (red) clusters first by time and then by treatment in accordance with the results from the PCA. <br/>
+One more time, the sample B4 is not with the other samples from the treated cell line 2 at 24h abd by consequence shows less agreement with the other replicates.
 
 <img src="images/output_results/heatmap_outlier.JPG" alt="image" style="width:600px;height:auto;">
 
-The boxplot gives a quantitative look of potentials outliers within cell lines.	We only computes correlation between the samples of the same cell line here. The cell line 1 is in blue and the cell line 2 is in red.
-Even though correlation values are greater than 98%, which is really high compared to some previous results, B4 has lower values that the other samples from cell line 2 correlation and the third quartile is lower than the 1st quartile of the other samples. Another evidence that B4 has less overlap with the other samples.
+The boxplot gives a quantitative look of potentials outliers within cell lines.	<br/>
+The cell line 1 is in blue and the cell line 2 is in red. <br/>
+Even though correlation values are greater than 98%, which is really high compared to some previous results, B4 has lower values than the other samples from the same cell line. Its third quartile is lower than the 1st quartile of the other samples. Another evidence that B4 has less overlap with the other samples.
 
 <img src="images/output_results/boxplot_outlier.JPG" alt="image" style="width:600px;height:auto;">
 
