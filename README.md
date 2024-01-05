@@ -217,7 +217,7 @@ We can see that sites losing chromatin accessibility are strongly enriched in th
    ![](images/output_results/Motifs_up.JPG)
 
 
-We also output a heatmap of the motifs accross all contrasts. The color is the log of the log of the p-value from the motif analysis. Blue squares are for motifs that are in peaks losing chromatin accessibility and red squares are for peaks gaining chromatin accessibility. The size of the square is proportional to its significance. We then cluster the heatmap by similarites and obtain clusters of motifs accross contrasts. The overall results is the following:
+We also output a heatmap of the motifs accross all contrasts. The color is the log of the log of the p-value from the motif analysis. Blue squares are for motifs that are in peaks losing chromatin accessibility and red squares are for peaks gaining chromatin accessibility. We then cluster the heatmap by similarites and obtain clusters of motifs accross contrasts. The overall results is the following:
 
    <img src="/images/output_results/motif_heatmap.JPG" alt="image" width="20%" height="auto">
      
