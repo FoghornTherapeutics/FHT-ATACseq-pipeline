@@ -15,25 +15,22 @@ The standard pipeline was run on publicly available data from paper "[Chromatin 
 
 **Data from GEO series**:  [link](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101975)
 
-Overview of experiment:
+### Overview of experiment:
 * Biological context (N=2):  TOV21G, HCT116
 * wild type and modified with stable ARID1A knockout
 * Perturbagens (N=1):  shRNA knockdown of ARID1B
 * Negative control (N=1):  wild type / untreated
 * Replicates:  N=2
 
-
-
-### HCT116 (ACH-000971)
+### Specifics of HCT116 (ACH-000971) samples
 * WT: SRR5876158 & SRR5876159
 * ARID1B knockdown: SRR5876160 & SRR5876161
 * ARID1A knockout: SRR5876162 & SRR5876163
 * ARID1A knockout ARID1B knockdown:SRR5876164 & SRR5876165
 
-### TOV21G (ACH-000885)
+### Specifics of TOV21G (ACH-000885) samples
 * WT: SRR5876661 & SRR5876662
 * ARID1B knockdown: SRR5876663 & SRR5876664
-
 
 # Description of the pipeline
 
