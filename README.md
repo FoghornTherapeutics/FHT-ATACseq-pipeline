@@ -261,10 +261,3 @@ In this example, we compare the contrasts 1, 2 and 3. When combining ARID1A knoc
 Rgt-hint also outputs profile plots. The x-axis id the base pair +/- 100bp either side of the FOSL1:JUNB motif footprint. The y-axis is the coverage of the BAM file reads. It correlates with the open chromatin and assumes to be TF activity. For example, FOS:JUNB is one of most changing motifs in the contrast 3. 
  
 <img src="/images/output_results/footprint_profile.JPG" alt="image" style="width:500px;height:auto;">
-
-
-
-
-
-
-
