@@ -42,7 +42,7 @@ The overall ATACseq architecture is split between two parts: the alignment and t
 
 The alignment includes steps to remove adapters, align to the genome, remove duplicates and filter to reads less than 120 bp in length (to retain fragments that represent open regions). We obtain two major output files that are the BAM files (aligned reads) and BED/narrowPeak files (identifying regions of open chromatin, "peaks").
 
-<img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:600px;height:auto;">
+<img src="images/data_flow/alignment_data_flow.JPG" alt="image" style="width:450px;height:auto;">
 
 You can find a more detailed version of the data flow diagram of the aligmnent [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/code/alignment/README.md). 
 
