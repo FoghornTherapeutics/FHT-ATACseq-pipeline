@@ -157,29 +157,25 @@ The box plot of sample-sample correlation are the same correlation values from t
 
    
    We also provided another example of data that highlight an outlier through the analysis. It is detaile [here](https://github.com/FoghornTherapeutics/FHT-ATACseq-pipeline/blob/main/QC_example_with_outlier.md).
+   
+## 2) Differential Peak Area (DPA)
 
+The peak area is the quantification of the signal within significant enriched regions of sequencing reads also called peaks.
 
+Differential peak area analysis comapres the intensity of sequencing read enrichment (peaks) across different genomic regions between conditions. In our case, we could comapre HCT116 WT vs ARID1B KD. This analysis helps identify significant changes in DNA-protein interactions or chromatin accessibility, which are crucial for understanding gene regulation and disease mechanisms. 
 
-The next part is to compare groups of samples accross tretment. In this analysis, we compare the following:
+Once we obtain a logFC and a p-value from the statistical comparison, we divide peaks into three catehories:
+* Down - peaks losing chromatin accessibility: p-value < 0.05 &  logFC < - 0.5.
+* Up - peaks gaining chromatin accessibility: p-value < 0.05 &  logFC > 0.5.
+* Unchanged - others: p-value > 0.05 or  |logFC| < 0.5.
+
+For this section we are going to look these contrasts:
 * Contrast 1: WT HCT116 and ARID1B KD
 * Contrast 2: WT HCT116 and ARID1A KO
 * Contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO)
 * Contrast 4: ARID1B KD and (ARID1B KD + ARID1A KO) 
 * Contrast 5: ARID1A KO and (ARID1B KD + ARID1A KO) 
 * Contrast 6: WT TOV21G and ARID1B KD
-
-Contrast 1 and 4 are similar and Contrast 2 and 5 are also similar.
-   
-## 2) Differential Peak Area (DPA)
-
-The peak area is the quantification of the signal within significant enriched regions of sequencing reads also called peaks.
-
-Differential peak area analysis comapres the intensity of sequencing read enrichment (peaks) across different genomic regions between conditions. In our case, we could comapre WT HCT116 and ARID1B KD. This analysis helps identify significant changes in DNA-protein interactions or chromatin accessibility, which are crucial for understanding gene regulation and disease mechanisms. 
-
-Once we obtain a logFC and a p-value from the statistical comparison, we divide peaks into three catehories:
-* Down - peaks losing chromatin accessibility: p-value < 0.05 &  logFC < - 0.5.
-* Up - peaks gaining chromatin accessibility: p-value < 0.05 &  logFC > 0.5.
-* Unchanged - others: p-value > 0.05 or  |logFC| < 0.5.
 
 The following boxplot gives an overview of the results for each contrast showing the number of peaks losing or gainig accessiblity. Just like we predicted from the QC check with the PCA and sample-to-sample correlation, HCT116 have a strong effect with the double treatment, then a less strong effect with ARID1A knockout and a much modest effect with ARID1B knockdown. 
 
