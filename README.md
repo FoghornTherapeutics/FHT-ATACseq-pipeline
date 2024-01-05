@@ -258,6 +258,27 @@ Footprinting identifies precise regions of DNA that are strongly bound by protei
 
 To identfy these regions, we use [Rgt-hint](https://reg-gen.readthedocs.io/en/latest/hint/tutorial-dendritic-cell.html) to generate new bed files that consider peak regions for footprinting. It then finds motifs overlapping with predicted footprints and generates average ATAC-seq profiles around binding sites of particular TFs. 
 
+To highlight significantly upregulated or downregulated TF motifs, we generate volcano plots. The y-axis is the negative logarithm of the p-value (statistical significance) against the log fold change (magnitude of change) on the x-axis. The plot resembles a volcanic eruption due to its shape. Some points are not significantly different form the "body" of the volcano, while some points are significantly different (both large magnitude of change and high statistical significance) shoot out to the sides and top, forming the "eruption".
+
+The heatmpa is another way to visualize difference a
+
+
+tool used to represent the magnitude of values in a matrix or table as colors. It's commonly used in various fields, including bioinformatics, statistics, and machine learning, to visually represent complex data sets. Here's a basic overview of heatmaps:
+
+Components of a Heatmap:
+
+Matrix Format: Data is arranged in a grid, where rows and columns represent different variables or categories.
+Color Coding: Each cell in the grid is colored based on the value it represents. The color scale is typically a gradient showing variations in data value, with different colors representing different ranges of values.
+Interpretation:
+
+Visual Representation: The color intensity in each cell corresponds to the magnitude of the value. Darker or more intense colors usually indicate higher values, and lighter colors indicate lower values.
+Pattern Recognition: Heatmaps make it easier to identify patterns, correlations, or clusters in large data sets.
+
+
+
+
+
+
 In this example, when combining ARID1A knockout and ARID1B knockdown, we have a higher logFC between the two groups (WT vs compound) than we the two other first contrasts. The volcano plots highlights a lot of TF motifs that are downregulated. The heatmap (ordered by desending absolute value of logFC and filtered for only significant logFC) shows a clear difference in footprint scores between WT HCTT16 and ARID1A knockout and ARID1B knockdown HCT116 cells.
  <img src="/images/output_results/footprint.JPG" alt="image" style="width:1000px;height:auto;">
 
