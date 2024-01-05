@@ -72,7 +72,7 @@ For a given contrast we define the peaks as the union of the peaks for the group
 # Results
 
 
-1) QC check
+## 1) QC check
 
 The first part of the analysis starts with some QC measures:
 
@@ -170,7 +170,7 @@ The next part is to compare groups of samples accross tretment. In this analysis
 
 Contrast 1 and 4 are similar and Contrast 2 and 5 are also similar.
    
-2) Differential Peak Area (DPA)
+## 2) Differential Peak Area (DPA)
 
 The peak area is the quantification of the signal within significant enriched regions of sequencing reads also called peaks.
 
@@ -194,7 +194,7 @@ ARID1A knockout in HCT116 WT cells dramatically altered overall chromatin access
 
 
      
-3) Genomic location:
+## 3) Genomic location:
 
 
 The genomic location refers to a specific position or region within a genome, the complete set of DNA in an organism. In this case, majority of loss of accessibility occur at distal intergenic regions. Decreased sites are enriched at intronic regions regions while increased sites are enriched at promoters. 
@@ -203,7 +203,7 @@ The genomic location refers to a specific position or region within a genome, th
 
   
      
-4) Motif analysis: 
+## 4) Motif analysis: 
    
 The motif analysis is a key aspect of genomics and molecular biology, helping to decode the functional elements of genetic sequences and their role in regulating biological processes. We use [Hypergeometric Optimization of Motif EnRichment (HOMER)](http://homer.ucsd.edu/homer/motif/), a widely used software suite for motif analysis in biological sequences, particularly focused on the analysis of regulatory DNA and RNA sequences. 
 
@@ -235,7 +235,7 @@ For each contrast and for each category of peaks, we analyze the scatter plot of
 
    <img src="/images/output_results/motifs_sc.JPG" alt="image" style="width:550px;height:auto;">
      
-5) Tornado plot 
+## 5) Tornado plot 
 
 A tornado plot is a bar chart to visualize all the peaks at once.  Each row is a peak and the intensity of the color represents the read count.
 
@@ -247,7 +247,7 @@ Keeping the exact same order of the list of peaks, we generate the tornado plot 
      
 
 
-6) Footprinting
+## 6) Footprinting
 
 
 Footprinting identifies precise regions of DNA that are strongly bound by proteins, such as transcription factors. It is based on the fact that when a protein binds to DNA, it protects that stretch of DNA from being cut or modified by certain chemicals or enzymes. By identifying these protected regions, we can determine the exact location and sequence of DNA where proteins bind. 
