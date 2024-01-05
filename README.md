@@ -225,8 +225,7 @@ It is possible to zoom in some of the clustered regions in the heatmap to analyz
 
    <img src="/images/output_results/motif_heatmap_zoom.JPG" alt="image" style="width:550px;height:auto;">
      
-For each contrast and for each category of peaks, we analyze the scatter plot of the motifs the most significantly changing. The x-axis is the perrcentage in the Target Sequence over the Background Sequence and the y-axis is the siginificance. The further a point is on the upper right corner, the most siginificantly it is changed between the negative control and the treatment. In this case, we highlight again the AP1 family for the contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO).
-
+For each contrast and for each category of peaks, we analyze the scatter plot of the motifs the most significantly changing. The x-axis is the perrcentage in the Target Sequence over the Background Sequence and the y-axis is the siginificance. The further a point is on the upper right corner, the most siginificantly it is changed between the negative control and the treatment. Here is an example for contrast 3: WT HCT116 and (ARID1B KD + ARID1A KO), as noted in Kelso et al AP1 family transcription factors stand our and we have highlighted them in red.
 
    <img src="/images/output_results/motifs_sc.JPG" alt="image" style="width:550px;height:auto;">
      
