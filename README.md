@@ -8,7 +8,7 @@ See the paper [ATAC-seq: A Method for Assaying Chromatin Accessibility Genome-Wi
 
 # Overview
 
-Here we present a computational pipeline and related techniques for analyzing ATAC-seq data.  The ultimate goal of this pipeline is identify genomic regions whose chromatin accessibility changes when a biological system is perturbed (using a compound or a genetic alteration i.e. CRISPR).  Here we will walk through an example of the outputs of this pipeline using publicly available data to illustrate the main outputs and how we use them.
+Here we present a computational pipeline and related techniques for analyzing ATAC-seq data.  The ultimate goal of this pipeline is identify genomic regions whose chromatin accessibility changes when a biological system is perturbed (using a compound or a genetic alteration i.e. CRISPR).  Here we will walk through an example of the outputs of this pipeline using publicly available data to illustrate the main outputs and how we use them.  Note that we have not yet added details of installation/setup - we will if there is interest - but we provide the code as more detailed description of the details of the calculations.
 
 
 # Data
